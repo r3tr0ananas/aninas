@@ -19,7 +19,7 @@ async def random(inter: disnake.CommandInteraction):
         request = await client.get(f"{SATA_ANDAGI}/random")
         data = request.json()
 
-    await inter.followup.send(f"{data['url']}")
+    await inter.followup.send(data["url"])
 
 @osaker.sub_command(description="Search for a random osaker clip")
 async def search(
