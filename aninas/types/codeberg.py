@@ -88,4 +88,5 @@ class CodebergUser:
         self.followers = self.data.get("followers_count")
         self.following = self.data.get("following_count")
         self.starred_repos = self.data.get("starred_repos_count")
-        self.joined_orgs = [CodebergOrg(org) for org in self.orgs]
+        if self.orgs is not None:
+            self.joined_orgs = [CodebergOrg(org) for org in self.orgs]
