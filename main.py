@@ -7,7 +7,7 @@ class MyBot(commands.InteractionBot):
     def __init__(self):
         intents = disnake.Intents.default()
         intents.message_content = True
-        super().__init__(intents=intents, test_guilds=[863416692083916820])
+        super().__init__(intents=intents)
 
     async def on_ready(self):
         print(f"logged in as {str(self.user)}")

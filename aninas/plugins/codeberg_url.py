@@ -77,8 +77,8 @@ async def message(message: disnake.Message):
         description = 
         f"""### {emoji} [{data.title}]({data.html_url})
         {data.body}
-        """, 
-        color=color 
+        """,
+        color=color
     )
 
     embed.set_author(
@@ -95,6 +95,9 @@ async def message(message: disnake.Message):
 
     await message.channel.send(embed=embed)
 
-    await message.edit(suppress_embeds=True)
+    try:
+        await message.edit(suppress_embeds=True)
+    except disnake.Forbidden:
+        pass
 
 setup, teardown = plugin.create_extension_handlers()
