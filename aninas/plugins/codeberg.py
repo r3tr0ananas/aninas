@@ -91,7 +91,7 @@ async def user(
 
     data = CodebergUser(data = data, orgs = orgs_data)
 
-    username = f"{data.full_name} (@{data.username})" if data.full_name != "" else f"{data.username}'s Codeberg Profile"
+    username = f"{data.full_name} (@{data.username})" if data.full_name != "" else f"{data.username}"
 
     if data.pronouns != "":
         username = f"{username} | {data.pronouns}"
@@ -99,7 +99,7 @@ async def user(
     embed = disnake.Embed(
         description = 
         f"""### [{username}]({data.user_url})
-        ```{data.description}```
+        {data.description}
         """, 
         color=0xDE3163
     )

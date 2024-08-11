@@ -1,10 +1,13 @@
 import asyncio
+import disnake
 from disnake.ext import commands
 from aninas.constant import BOT_TOKEN
 
 class MyBot(commands.InteractionBot):
     def __init__(self):
-        super().__init__()
+        intents = disnake.Intents.default()
+        intents.message_content = True
+        super().__init__(intents=intents, test_guilds=[863416692083916820])
 
     async def on_ready(self):
         print(f"logged in as {str(self.user)}")
