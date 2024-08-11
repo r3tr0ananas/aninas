@@ -1,13 +1,10 @@
 import disnake
 from disnake.ext import plugins, commands
-import httpx
 from datetime import datetime
 
-from ..constant import CODEBERG, CODEBERG_KEY
-from ..types import CodebergRepo, CodebergUser
+from ..utils import codeberg as cb
 
 plugin = plugins.Plugin()
-client = httpx.AsyncClient(headers={"Authorization": f"token {CODEBERG_KEY}"})
 
 @plugin.slash_command()
 async def codeberg(inter: disnake.CommandInteraction):
@@ -22,22 +19,7 @@ async def repo(
 ):
     await inter.response.defer()
 
-    request = await client.get(f"{CODEBERG}/repos/{user}/{repo}")
-    data = request.json()
-
-    if "errors" in data:
-        error_message = data["errors"][0]
-
-        embed = disnake.Embed(
-            title = f"Error while requesting: {user}/{repo}",
-            description = f"{error_message}",
-            color=0xFF0000
-        )
-
-        await inter.followup.send(embed=embed)
-        return
-
-    data = CodebergRepo(data)
+    data = await cb.get_repo(user, repo)
 
     embed = disnake.Embed(
         description = 
@@ -68,28 +50,7 @@ async def user(
 ):
     await inter.response.defer()
 
-    request = await client.get(f"{CODEBERG}/users/{user}")
-    data = request.json()
-
-    if "message" in data:
-        error_message = data["message"]
-
-        embed = disnake.Embed(
-            title = f"Error while requesting: {user}",
-            description = f"{error_message}",
-            color=0xFF0000
-        )
-
-        await inter.followup.send(embed=embed)
-        return
-
-    request_orgs = await client.get(f"{CODEBERG}/users/{user}/orgs")
-    request_repos = await client.get(f"{CODEBERG}/users/{user}/repos")
-
-    orgs_data = request_orgs.json()
-    repos_data = request_repos.json()
-
-    data = CodebergUser(data = data, orgs = orgs_data)
+    data, repo_amount = await cb.get_user(user)
 
     username = f"{data.full_name} (@{data.username})" if data.full_name != "" else f"{data.username}"
 
@@ -116,7 +77,7 @@ async def user(
 
     embed.add_field(
         name = "Total Repos",
-        value = f"[{len(repos_data)}]({data.user_url}?tab=repositories)"
+        value = f"[{repo_amount}]({data.user_url}?tab=repositories)"
     )
 
     if data.orgs != []:

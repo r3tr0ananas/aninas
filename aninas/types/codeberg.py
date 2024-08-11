@@ -101,20 +101,24 @@ class CodebergPI:
 
     owner: CodebergUser = field(default=None)
 
+    type: str = field(default=None)
     title: str = field(default=None)
     body: str = field(default=None)
     labels: List[str] = field(default=None)
     state: str = field(default=None)
+    created_at: str = field(default=None)
     merged: bool = field(default=None)
     draft: bool = field(default=None)
     html_url: str = field(default=None)
 
     def __post_init__(self):
         self.owner = CodebergUser(self.data.get("user"))
+        self.type = "pulls" if self.data.get("merged") is not None else "issues"
         self.title = self.data.get("title")
         self.body = self.data.get("body")
         self.labels = [label["name"] for label in self.data.get("labels")]
         self.state = self.data.get("state")
+        self.created_at = self.data.get("created_at")
         self.merged = self.data.get("merged", False)
         self.draft = self.data.get("draft", False)
         self.html_url = self.data.get("html_url")

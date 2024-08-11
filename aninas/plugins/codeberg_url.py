@@ -1,20 +1,27 @@
-from disnake.ext import plugins, commands
-from datetime import datetime
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ..types import CodebergPI
+
+from disnake.ext import plugins
+from datetime import datetime   
 
 import disnake
-import httpx
 import re
 
-from ..constant import CODEBERG, CODEBERG_KEY
-from ..types import CodebergPI
+from ..utils import codeberg 
 
 plugin = plugins.Plugin()
-client = httpx.AsyncClient(headers={"Authorization": f"token {CODEBERG_KEY}"})
 
 # Taken from Monty Bot
 CODEBERG_ISSUE_LINK_REGEX = re.compile(
     r"https?:\/\/codeberg.org\/(?P<org>[a-zA-Z0-9][a-zA-Z0-9\-]{1,39})\/(?P<repo>[\w\-\.]{1,100})\/"
     r"(?P<type>issues|pulls)\/(?P<number>[0-9]+)[^\s]*"
+)
+
+AUTOMATIC_REGEX = re.compile(
+    r"((?P<org>[a-zA-Z0-9][a-zA-Z0-9\-]{1,39})\/)?(?P<repo>[\w\-\.]{1,100})#(?P<number>[0-9]+)"
 )
 
 EMOJIS = {
@@ -31,28 +38,46 @@ async def message(message: disnake.Message):
     if message.author.bot:
         return
     
-    regex_match = CODEBERG_ISSUE_LINK_REGEX.match(message.content)
+    issue_link = CODEBERG_ISSUE_LINK_REGEX.match(message.content)
+    automatic = AUTOMATIC_REGEX.match(message.content)
 
-    if not regex_match:
-        return
-    
-    user = regex_match.group("org")
-    repo = regex_match.group("repo")
-    git_type = regex_match.group("type")
-    number = regex_match.group("number")
+    if issue_link:
+        user = issue_link.group("org")
+        repo = issue_link.group("repo")
+        number = issue_link.group("number")
 
-    request = await client.get(f"{CODEBERG}/repos/{user}/{repo}/{git_type}/{number}")
-    data = request.json()
+        data = await codeberg.get_pi(user, repo, number)
 
-    if "message" in data:
-        return
+        if data is None:
+            return
+        
+        embed = await make_embed(data)
 
-    emoji = ""
-    color = ""
+        await message.channel.send(embed=embed)
 
-    data = CodebergPI(data)
+        try:
+            await message.edit(suppress_embeds=True)
+        except disnake.Forbidden:
+            pass
 
-    if git_type == "pulls":
+    elif automatic:
+        user = automatic.group("org")
+        repo = automatic.group("repo")
+        number = automatic.group("number")
+
+        data = await codeberg.get_pi(user, repo, number)
+
+        if data is None:
+            return
+        
+        embed = await make_embed(data)
+
+        await message.channel.send(embed=embed)
+
+
+
+async def make_embed(data: CodebergPI) -> disnake.Embed:
+    if data.type == "pulls":
         if data.state == "open" and data.draft == False:
             emoji = EMOJIS["pulls_open"]
             color = 0x87ab63
@@ -78,7 +103,7 @@ async def message(message: disnake.Message):
         f"""### {emoji} [{data.title}]({data.html_url})
         {data.body}
         """,
-        color=color
+        color = color
     )
 
     embed.set_author(
@@ -93,11 +118,10 @@ async def message(message: disnake.Message):
             value = " | ".join(data.labels)
         )
 
-    await message.channel.send(embed=embed)
+    created_at = datetime.strptime(data.created_at, "%Y-%m-%dT%H:%M:%SZ").strftime("%d/%m/%Y %H:%M")
 
-    try:
-        await message.edit(suppress_embeds=True)
-    except disnake.Forbidden:
-        pass
+    embed.set_footer(text=f"Created: {created_at}")
+
+    return embed
 
 setup, teardown = plugin.create_extension_handlers()

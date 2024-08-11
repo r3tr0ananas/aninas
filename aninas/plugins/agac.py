@@ -1,12 +1,9 @@
 import disnake
 from disnake.ext import plugins, commands
-import disnake.http
-import httpx
 
-from ..constant import AGAC_URL
-from ..types.agac import AGAC
+from ..utils import agac as agac_utils
+from ..types import AGAC
 
-client = httpx.AsyncClient()
 plugin = plugins.Plugin()
 
 @plugin.slash_command()
@@ -18,11 +15,7 @@ async def agac(inter: disnake.CommandInteraction):
 async def random(inter: disnake.CommandInteraction):
     await inter.response.defer()
 
-    request = await client.get(f"{AGAC_URL}/random")
-    id = request.headers.get("x-image-id")
-
-    metadata = await client.get(f"{AGAC_URL}/get/{id}/metadata")
-    metadata = AGAC(metadata.json())
+    metadata = await agac_utils.get_random()
 
     embed = await makeEmbed(metadata)
 
@@ -36,10 +29,9 @@ async def search(
 ):
     await inter.response.defer()
 
-    request = await client.get(f"{AGAC_URL}/search?query={query}")
-    data = request.json()
+    metadata = await agac_utils.search(query)
 
-    if data == []:
+    if metadata is None:
         embed = disnake.Embed(
             title = "ImageNotFound", 
             description = "No image found based on your query 😔",
@@ -49,7 +41,6 @@ async def search(
         await inter.followup.send(embed=embed)
         return
 
-    metadata = AGAC(data[0])
 
     embed = await makeEmbed(metadata)
 
@@ -57,14 +48,7 @@ async def search(
 
 @search.autocomplete("query")
 async def query_autocomp(inter: disnake.ApplicationCommandInteraction, query: str):
-    comps = []
-
-    request = await client.get(f"{AGAC_URL}/search?query={query}")
-
-    for item in request.json():
-        comps.append(item["name"])
-
-    return comps
+    return await agac_utils.autocomplete(query)
 
 async def makeEmbed(metadata: AGAC) -> disnake.Embed:
     authors = [f"[{author.name}](https://github.com/{author.github})" for author in metadata.authors]
@@ -80,7 +64,7 @@ async def makeEmbed(metadata: AGAC) -> disnake.Embed:
         color=0xDE3163      
     )
 
-    embed.set_image(url=f"{AGAC_URL}/get/{metadata.id}")
+    embed.set_image(url = metadata.image)
     
     embed.set_footer(
         text="Brought to you by https://github.com/r3tr0ananas/agac-api"
