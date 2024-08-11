@@ -1,0 +1,38 @@
+[project]
+name = "aninas"
+authors = [
+    {name = "Ananas", email = "ananas@ananas.moe"}
+]
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+keywords = []
+classifiers = [
+	'Operating System :: Microsoft :: Windows :: Windows 11',
+    'Operating System :: Microsoft :: Windows :: Windows 10',
+    'Operating System :: POSIX :: Linux',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+	'Programming Language :: Python :: 3.11'
+]
+dependencies = [
+    "disnake",
+    "disnake-ext-plugins@git+https://github.com/DisnakeCommunity/disnake-ext-plugins",
+    "httpx",
+    "python-decouple"
+]
+
+dynamic = ["version"]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "build"
+]
+
+[tool.setuptools.dynamic]
+version = { attr = "aninas.__version__" }
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
