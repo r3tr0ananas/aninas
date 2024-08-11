@@ -67,6 +67,7 @@ class CodebergUser:
     full_name: str = field(default=None)
     user_url: str = field(default=None)
     avatar: str = field(default=None)
+    pronouns: str = field(default=None)
     created: str = field(default=None)
     location: str = field(default=None)
     website: str = field(default=None)
@@ -81,6 +82,7 @@ class CodebergUser:
         self.full_name = self.data.get("full_name")
         self.user_url = "https://codeberg.org/" + self.username
         self.avatar = self.data.get("avatar_url")
+        self.pronouns = self.data.get("pronouns")
         self.created = self.data.get("created")
         self.location = self.data.get("location")
         self.website = self.data.get("website")
@@ -88,5 +90,6 @@ class CodebergUser:
         self.followers = self.data.get("followers_count")
         self.following = self.data.get("following_count")
         self.starred_repos = self.data.get("starred_repos_count")
+
         if self.orgs is not None:
             self.joined_orgs = [CodebergOrg(org) for org in self.orgs]
