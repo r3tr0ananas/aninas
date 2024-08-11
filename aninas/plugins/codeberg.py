@@ -91,7 +91,7 @@ async def user(
 
     data = CodebergUser(data = data, orgs = orgs_data)
 
-    username = f"{data.full_name} (@{data.username})" if data.full_name != "" else data.username
+    username = f"{data.full_name} (@{data.username})" if data.full_name != "" else f"{data.username}'s Codeberg Profile"
 
     if data.pronouns != "":
         username = f"{username} | {data.pronouns}"
