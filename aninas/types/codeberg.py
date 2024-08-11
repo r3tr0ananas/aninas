@@ -119,6 +119,6 @@ class CodebergPI:
         self.labels = [label["name"] for label in self.data.get("labels")]
         self.state = self.data.get("state")
         self.created_at = self.data.get("created_at")
-        self.merged = self.data.get("merged")
-        self.draft = self.data.get("draft")
+        self.merged = self.data.get("pull_request", {}).get("merged")
+        self.draft = self.data.get("pull_request", {}).get("draft")
         self.html_url = self.data.get("html_url")
