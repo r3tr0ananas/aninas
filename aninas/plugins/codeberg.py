@@ -21,7 +21,7 @@ async def repo(
 
     data = await cb.get_repo(user, repo)
 
-    if isinstance(str, data):
+    if isinstance(data, str):
         embed = disnake.Embed(
             title = f"Error while requesting: {user}/{repo}",
             description = data,
@@ -62,7 +62,7 @@ async def user(
 
     data, repo_amount = await cb.get_user(user)
 
-    if isinstance(str, data):
+    if isinstance(data, str):
         embed = disnake.Embed(
             title = f"Error while requesting: {user}",
             description = data,
