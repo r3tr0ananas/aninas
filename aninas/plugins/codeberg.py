@@ -21,6 +21,16 @@ async def repo(
 
     data = await cb.get_repo(user, repo)
 
+    if isinstance(str, data):
+        embed = disnake.Embed(
+            title = f"Error while requesting: {user}/{repo}",
+            description = data,
+            color=0xFF0000
+        )
+
+        await inter.followup.send(embed=embed)
+        return      
+
     embed = disnake.Embed(
         description = 
         f"""### [{data.name}]({data.url})
@@ -51,6 +61,16 @@ async def user(
     await inter.response.defer()
 
     data, repo_amount = await cb.get_user(user)
+
+    if isinstance(str, data):
+        embed = disnake.Embed(
+            title = f"Error while requesting: {user}",
+            description = data,
+            color=0xFF0000
+        )
+
+        await inter.followup.send(embed=embed)
+        return      
 
     username = f"{data.full_name} (@{data.username})" if data.full_name != "" else f"{data.username}"
 

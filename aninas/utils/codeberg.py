@@ -34,7 +34,7 @@ async def get_user(user: str) -> Tuple[CodebergUser, int] | str:
 
     if "message" in data:
         error_message = data["message"]
-        return error_message
+        return error_message, None
 
     request_orgs = await client.get(f"{CODEBERG}/users/{user}/orgs")
     request_repos = await client.get(f"{CODEBERG}/users/{user}/repos")
