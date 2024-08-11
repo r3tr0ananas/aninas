@@ -5,7 +5,7 @@ import httpx
 
 from ..constant import AGAC_URL
 
-http_client = httpx.AsyncClient()
+client = httpx.AsyncClient()
 plugin = plugins.Plugin()
 
 @plugin.slash_command()
@@ -16,12 +16,11 @@ async def agac(inter: disnake.CommandInteraction):
 async def random(inter: disnake.CommandInteraction):
     await inter.response.defer()
 
-    async with http_client as client:
-        request = await client.get(f"{AGAC_URL}/random")
-        id = request.headers.get("x-image-id")
+    request = await client.get(f"{AGAC_URL}/random")
+    id = request.headers.get("x-image-id")
 
-        metadata = await client.get(f"{AGAC_URL}/get/{id}/metadata")
-        metadata = metadata.json()
+    metadata = await client.get(f"{AGAC_URL}/get/{id}/metadata")
+    metadata = metadata.json()
 
     authors = [f"[{author['name']}](https://github.com/{author['github']})" for author in metadata["authors"]]
 
@@ -51,21 +50,20 @@ async def search(
 ):
     await inter.response.defer()
 
-    async with http_client as client:
-        request = await client.get(f"{AGAC_URL}/search?query={query}")
-        data = request.json()
+    request = await client.get(f"{AGAC_URL}/search?query={query}")
+    data = request.json()
 
-        if data == []:
-            embed = disnake.Embed(
-                title = "ImageNotFound", 
-                description = "No image found based on your query 😔",
-                color=0xDC143C
-            )
+    if data == []:
+        embed = disnake.Embed(
+            title = "ImageNotFound", 
+            description = "No image found based on your query 😔",
+            color=0xDC143C
+        )
 
-            await inter.followup.send(embed=embed)
-            return
+        await inter.followup.send(embed=embed)
+        return
 
-        metadata = data[0]
+    metadata = data[0]
 
     authors = [f"[{author['name']}](https://github.com/{author['github']})" for author in metadata["authors"]]
 
@@ -92,8 +90,7 @@ async def search(
 async def query_autocomp(inter: disnake.ApplicationCommandInteraction, query: str):
     comps = []
 
-    async with http_client as client:
-        request = await client.get(f"{AGAC_URL}/search?query={query}")
+    request = await client.get(f"{AGAC_URL}/search?query={query}")
 
     for item in request.json():
         comps.append(item["name"])
