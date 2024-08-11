@@ -4,7 +4,7 @@ from aninas.constant import BOT_TOKEN
 
 class MyBot(commands.InteractionBot):
     def __init__(self):
-        super().__init__(test_guilds=[863416692083916820])
+        super().__init__()
 
     async def on_ready(self):
         print(f"logged in as {str(self.user)}")
