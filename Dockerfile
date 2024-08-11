@@ -6,6 +6,7 @@ COPY aninas ./aninas
 COPY pyproject.toml .
 COPY main.py .
 
+RUN apt-get update && apt-get install -y git
 RUN pip install .
 
 CMD ["python3", "main.py"]
