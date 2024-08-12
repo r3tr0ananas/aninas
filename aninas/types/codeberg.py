@@ -99,6 +99,7 @@ class CodebergUser:
 @dataclass
 class CodebergPI:
     data: dict = field(repr=False)
+    pr_data: dict = field(repr=False, default=None)
 
     owner: CodebergUser = field(default=None)
 
@@ -109,9 +110,14 @@ class CodebergPI:
     labels: List[str] = field(default=None)
     state: str = field(default=None)
     created_at: str = field(default=None)
+    html_url: str = field(default=None)
+    due_date: str = field(default=None)
+    milestone: str = field(default=None)
+    assginees: List[CodebergUser] = field(default=None)
+
     merged: bool = field(default=None)
     draft: bool = field(default=None)
-    html_url: str = field(default=None)
+    requsted_reviewers: List[CodebergUser] = field(default=None)
 
     full_name: str = field(default=None)
 
@@ -125,11 +131,28 @@ class CodebergPI:
         self.labels = [f"`{label['name']}`" for label in self.data.get("labels")]
         self.state = self.data.get("state")
         self.created_at = self.data.get("created_at")
-        self.merged = self.data.get("pull_request", {}).get("merged")
-        self.draft = self.data.get("pull_request", {}).get("draft")
         self.html_url = self.data.get("html_url")
+        self.due_date = self.data.get("due_date")
+        self.milestone = self.data.get("milestone")
 
-        self.full_name = self.data.get("repository", {}).get("full_name")
+        if self.milestone is not None:
+            self.milestone = self.milestone.get("title")
+
+        self.assginees = self.data.get("assignees")
+
+        if self.assginees is not None:
+            self.assginees = [CodebergUser(user) for user in self.assginees]
+
+        self.full_name = self.data.get("repository").get("full_name")
+
+        if self.pr_data is not None:
+            self.requsted_reviewers = self.pr_data.get("requested_reviewers", [])
+
+            if self.requsted_reviewers is not None:
+                self.requsted_reviewers = [CodebergUser(user) for user in self.requsted_reviewers]
+
+            self.merged = self.pr_data.get("merged")
+            self.draft = self.pr_data.get("draft")
 
 @dataclass
 class CodebergIC:

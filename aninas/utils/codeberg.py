@@ -49,12 +49,21 @@ async def get_user(user: str) -> Tuple[CodebergUser, int] | str:
 
 async def get_pi(user: str, repo: str, number: int) -> Optional[CodebergPI]:
     request = await client.get(f"{CODEBERG}/repos/{user}/{repo}/issues/{number}")
+    pr_request = await client.get(f"{CODEBERG}/repos/{user}/{repo}/pulls/{number}")
+
+    if request.is_error:
+        return None
+
     data = request.json()
+    pr_data = pr_request.json()
 
     if "message" in data:
         return None
     
-    return CodebergPI(data)
+    if "message" in pr_data:
+        pr_data = None
+
+    return CodebergPI(data=data, pr_data=pr_data)
 
 async def get_comment(user: str, repo: str, number: int, comment: int) -> Optional[CodebergIC]:
     request = await client.get(f"{CODEBERG}/repos/{user}/{repo}/issues/comments/{comment}")

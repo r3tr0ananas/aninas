@@ -14,7 +14,6 @@ from ..utils import codeberg, messages, ui
 import disnake
 import re
 
-
 plugin = plugins.Plugin()
 
 # Taken from Monty Bot
@@ -135,7 +134,7 @@ def make_embed(data: CodebergPI | CodebergIC, show_less = False) -> disnake.Embe
                 body = f"{body[:LIMIT_CHAR]}..."
 
         embed = disnake.Embed(
-            title = f"{emoji} #{data.id} [{data.full_name}] {data.title}",
+            title = f"{emoji} [{data.full_name}] #{data.id} {data.title}",
             description = body,
             color = color       
         )
@@ -148,10 +147,36 @@ def make_embed(data: CodebergPI | CodebergIC, show_less = False) -> disnake.Embe
             icon_url = data.owner.avatar
         )
 
-        if data.labels != []:
+        if data.labels != [] and not show_less:
             embed.add_field(
                 name = "Labels",
                 value = " | ".join(data.labels)
+            )
+        
+        if data.due_date is not None and not show_less:
+            due_date = int(datetime.strptime(data.due_date, "%Y-%m-%dT%H:%M:%SZ").timestamp())
+
+            embed.add_field(
+                name = "Due Date",
+                value = f"<t:{due_date}>"
+            )
+        
+        if data.milestone is not None and not show_less:
+            embed.add_field(
+                name = "Milestone",
+                value = data.milestone
+            )
+        
+        if data.requsted_reviewers is not None and not show_less:
+            embed.add_field(
+                name = "Requested Reviewers",
+                value = " | ".join([f"[{user.username}]({user.user_url})" for user in data.requsted_reviewers])
+            )
+
+        if data.assginees is not None and not show_less:
+            embed.add_field(
+                name = "Assignees",
+                value = " | ".join([f"[{user.username}]({user.user_url})" for user in data.assginees])
             )
 
         created_at = datetime.strptime(data.created_at, "%Y-%m-%dT%H:%M:%SZ").strftime("%d/%m/%Y %H:%M")
