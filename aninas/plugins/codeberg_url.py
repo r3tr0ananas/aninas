@@ -179,7 +179,7 @@ def make_embed(data: CodebergPI | CodebergIC, show_less = False) -> disnake.Embe
                 value = " | ".join([f"[{user.username}]({user.user_url})" for user in data.assginees])
             )
 
-        if data.assets is not None and not show_less:
+        if data.assets != [] and not show_less:
             embed.set_image(
                 data.assets
             )
