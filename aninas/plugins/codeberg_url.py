@@ -10,7 +10,7 @@ from datetime import datetime
 import disnake
 import re
 
-from ..utils import codeberg 
+from ..utils import codeberg, messages
 
 plugin = plugins.Plugin()
 
@@ -54,11 +54,7 @@ async def message(message: disnake.Message):
         embed = await make_embed(data)
 
         await message.channel.send(embed=embed)
-
-        try:
-            await message.edit(suppress_embeds=True)
-        except disnake.Forbidden:
-            pass
+        await messages.suppress_embeds(plugin, message)
 
     elif automatic:
         user = automatic.group("org")
@@ -73,8 +69,6 @@ async def message(message: disnake.Message):
         embed = await make_embed(data)
 
         await message.channel.send(embed=embed)
-
-
 
 async def make_embed(data: CodebergPI) -> disnake.Embed:
     if data.type == "pulls":
