@@ -134,14 +134,19 @@ class CodebergPI:
         self.html_url = self.data.get("html_url")
         self.due_date = self.data.get("due_date")
         self.milestone = self.data.get("milestone")
+        self.assginees = self.data.get("assignees")
+        self.assets = self.data.get("assets")
 
         if self.milestone is not None:
             self.milestone = self.milestone.get("title")
 
-        self.assginees = self.data.get("assignees")
-
         if self.assginees is not None:
             self.assginees = [CodebergUser(user) for user in self.assginees]
+        
+        if self.assets is not None:
+            for asset in self.assets:
+                if asset["name"].split(".")[-1] in ["png", "jpeg", "jpg"]:
+                    self.assets = asset["browser_download_url"]
 
         self.full_name = self.data.get("repository").get("full_name")
 

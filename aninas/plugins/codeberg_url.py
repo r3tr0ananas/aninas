@@ -100,7 +100,7 @@ async def message(message: disnake.Message):
         if len(data.body) > LIMIT_CHAR:
             view = ui.ShowLess(data, message.author, make_embed)
 
-        await message.channel.send(embed=embed,  view=view)
+        await message.channel.send(embed=embed, view=view)
         await messages.suppress_embeds(plugin.bot, message)
 
 
@@ -179,6 +179,11 @@ def make_embed(data: CodebergPI | CodebergIC, show_less = False) -> disnake.Embe
                 value = " | ".join([f"[{user.username}]({user.user_url})" for user in data.assginees])
             )
 
+        if data.assets is not None and not show_less:
+            embed.set_image(
+                data.assets
+            )
+        
         created_at = datetime.strptime(data.created_at, "%Y-%m-%dT%H:%M:%SZ").strftime("%d/%m/%Y %H:%M")
 
         embed.set_footer(text=f"Created: {created_at}")

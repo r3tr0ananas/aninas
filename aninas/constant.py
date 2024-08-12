@@ -13,6 +13,9 @@ class Emojis:
     star = "⭐"
     fork = "⑂"
     pensive = "😔"
+    notepad = "🗒️"
+    zap = "⚡"
+    package = "📦"
 
 class Colours:
     error = 0xFF0000

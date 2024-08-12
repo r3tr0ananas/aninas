@@ -19,7 +19,8 @@ dependencies = [
     "disnake",
     "disnake-ext-plugins@git+https://github.com/DisnakeCommunity/disnake-ext-plugins",
     "httpx",
-    "python-decouple"
+    "python-decouple",
+    "psutil"
 ]
 
 dynamic = ["version"]

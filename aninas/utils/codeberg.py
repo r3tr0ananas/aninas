@@ -49,13 +49,15 @@ async def get_user(user: str) -> Tuple[CodebergUser, int] | str:
 
 async def get_pi(user: str, repo: str, number: int) -> Optional[CodebergPI]:
     request = await client.get(f"{CODEBERG}/repos/{user}/{repo}/issues/{number}")
-    pr_request = await client.get(f"{CODEBERG}/repos/{user}/{repo}/pulls/{number}")
+    pr_data = None
 
     if request.is_error:
         return None
 
     data = request.json()
-    pr_data = pr_request.json()
+    if data["html_url"].split("/")[5]:
+        pr_request = await client.get(f"{CODEBERG}/repos/{user}/{repo}/pulls/{number}")
+        pr_data = pr_request.json()
 
     if "message" in data:
         return None

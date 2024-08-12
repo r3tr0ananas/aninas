@@ -6,29 +6,54 @@ if TYPE_CHECKING:
 
 from disnake.ext import plugins
 from datetime import datetime
+import platform
 
 import disnake
 
 from .. import __version__ as bot_version
+from ..utils.embeds import line_fix
+from ..utils.stats import Stats
+
 from disnake import __version__ as disnake_version
+from ..constant import Emojis
 
 plugin = plugins.Plugin()
+stats = Stats()
 
 BOT_START_TIME = int(datetime.now().timestamp())
 
 @plugin.slash_command()
 async def status(inter: disnake.CommandInteraction):
     embed = disnake.Embed(
-        title="Status",
-        description=f"""
-        Version: `{bot_version}`
-        Disnake version: `{disnake_version}`
+        title = "Status"
+    )
 
-        Guilds: `{len(plugin.bot.guilds)}`
-        
-        Latency: `{int(plugin.bot.latency * 1000)}ms`
-        Uptime: <t:{BOT_START_TIME}:R>
-        """
+    embed.add_field(
+        f"{Emojis.notepad} __Stats__",
+        line_fix(f"""
+        - Uptime: <t:{BOT_START_TIME}:R>
+        - Guilds: `{len(plugin.bot.guilds)}`
+        """),
+        inline  = False
+    )
+
+    embed.add_field(
+        f"{Emojis.zap} __Version__",
+        line_fix(f"""
+        - aninas: `{bot_version}`
+        - Disnake: `{disnake_version}`
+        - Python: `{platform.python_version()}`
+        """)    
+    )
+
+    embed.add_field(
+        f"{Emojis.package} __Resources__",
+        line_fix(f"""
+        - Latency: `{int(plugin.bot.latency * 1000)}ms`
+        - OS: `{platform.system()} {platform.release()}`
+        - CPU: `{stats.cpu_usage}%`
+        - RAM: `{stats.ram_usage} MB`
+        """)
     )
 
     embed.set_author(
