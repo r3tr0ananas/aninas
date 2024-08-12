@@ -93,61 +93,56 @@ async def message(message: disnake.Message):
     if message.author.bot:
         return
     
-    links = list(messages.extract_urls(message.content))
-    links = list(dict.fromkeys(links))
+    file = CODEBERG_RE.search(message.content)
+    comment = CODEBERG_COMMENT_LINK_REGEX.search(message.content)
+    regex_match = CODEBERG_ISSUE_LINK_REGEX.search(message.content) or AUTOMATIC_REGEX.search(message.content)
 
-    for link in links:
+    if file:
+        repo = file.group("repo")
+        path = file.group("path")
+        start_line = file.group("start_line")
+        end_line = file.group("end_line")
     
-        file = CODEBERG_RE.match(link)
-        comment = CODEBERG_COMMENT_LINK_REGEX.match(link)
-        regex_match = CODEBERG_ISSUE_LINK_REGEX.match(link) or AUTOMATIC_REGEX.match(link)
+        data = await codeberg.get_file(repo, path, start_line, end_line)
 
-        if file:
-            repo = file.group("repo")
-            path = file.group("path")
-            start_line = file.group("start_line")
-            end_line = file.group("end_line")
+        if data is None:
+            return        
         
-            data = await codeberg.get_file(repo, path, start_line, end_line)
+        await message.channel.send(data)
+        await messages.suppress_embeds(plugin.bot, message)
 
-            if data is None:
-                continue        
-            
-            await message.channel.send(data)
-            await messages.suppress_embeds(plugin.bot, message)
+    elif comment:
+        user = comment.group("org")
+        repo = comment.group("repo")
+        number = comment.group("number")
+        comment = comment.group("comment_id")
 
-        elif comment:
-            user = comment.group("org")
-            repo = comment.group("repo")
-            number = comment.group("number")
-            comment = comment.group("comment_id")
+        data = await codeberg.get_comment(user, repo, number, comment)
 
-            data = await codeberg.get_comment(user, repo, number, comment)
+        if data is None:
+            return
+        
+        embed = make_embed(data)
+        view = ShowLess(data, message.author)
 
-            if data is None:
-                continue
-            
-            embed = make_embed(data)
-            view = ShowLess(data, message.author)
+        await message.channel.send(embed=embed,  view=view)
+        await messages.suppress_embeds(plugin.bot, message)
 
-            await message.channel.send(embed=embed,  view=view)
-            await messages.suppress_embeds(plugin.bot, message)
+    elif regex_match:
+        user = regex_match.group("org")
+        repo = regex_match.group("repo")
+        number = regex_match.group("number")
 
-        elif regex_match:
-            user = regex_match.group("org")
-            repo = regex_match.group("repo")
-            number = regex_match.group("number")
+        data = await codeberg.get_pi(user, repo, number)
 
-            data = await codeberg.get_pi(user, repo, number)
+        if data is None:
+            return
+        
+        embed = make_embed(data)
+        view = ShowLess(data, message.author)
 
-            if data is None:
-                continue
-            
-            embed = make_embed(data)
-            view = ShowLess(data, message.author)
-
-            await message.channel.send(embed=embed,  view=view)
-            await messages.suppress_embeds(plugin.bot, message)
+        await message.channel.send(embed=embed,  view=view)
+        await messages.suppress_embeds(plugin.bot, message)
 
 
 def make_embed(data: CodebergPI | CodebergIC, show_less = False) -> disnake.Embed:
