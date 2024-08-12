@@ -4,15 +4,16 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     ...
 
-from ..types import CodebergPI, CodebergIC
 from disnake.ext import plugins
 from datetime import datetime
+
+from ..types import CodebergPI, CodebergIC
 from ..constant import Emojis, Colours
+from ..utils import codeberg, messages, ui
 
 import disnake
 import re
 
-from ..utils import codeberg, messages
 
 plugin = plugins.Plugin()
 
@@ -38,56 +39,6 @@ AUTOMATIC_REGEX = re.compile(
 
 LIMIT_CHAR = 240
 
-class ShowLess(disnake.ui.View):
-    def __init__(self, data: CodebergPI | CodebergIC, author: disnake.User):
-        super().__init__(timeout=None)
-
-        self.data = data
-        self.author = author
-
-    @disnake.ui.button(emoji="⬆️", label="Show less", style=disnake.ButtonStyle.green)
-    async def show_less(self, button: disnake.ui.Button, inter: disnake.MessageInteraction):
-        if self.author.id == inter.author.id or inter.permissions.manage_messages:
-            if len(self.data.body) <= LIMIT_CHAR:
-                await inter.response.send_message("There is nothing to shorten", ephemeral=True)
-                return
-
-            embed = make_embed(self.data, True)
-
-            await inter.response.edit_message(embed=embed, view=ShowMore(self.data, self.author))
-        else:
-            await inter.response.send_message("You are not allowed to press this button", ephemeral=True)
-    
-
-    @disnake.ui.button(emoji="🗑️", style=disnake.ButtonStyle.red)
-    async def delete(self, button: disnake.ui.Button, inter: disnake.MessageInteraction):
-        if self.author.id == inter.author.id or inter.permissions.manage_messages:
-            await inter.response.defer()
-            await inter.delete_original_response()
-        else:
-            await inter.response.send_message("You are not allowed to press this button", ephemeral=True)
-
-class ShowMore(disnake.ui.View):
-    def __init__(self, data: CodebergPI | CodebergIC, author: disnake.User):
-        super().__init__(timeout=None)
-
-        self.data = data
-        self.author = author
-    
-    @disnake.ui.button(emoji="⬇️", label="Show more", style=disnake.ButtonStyle.green)
-    async def show_more(self, button: disnake.ui.Button, inter: disnake.MessageInteraction):
-        if self.author.id == inter.author.id or inter.permissions.manage_messages:  
-            embed = make_embed(self.data)
-
-            await inter.response.edit_message(embed=embed, view=ShowLess(self.data, self.author))
-
-    @disnake.ui.button(emoji="🗑️", style=disnake.ButtonStyle.red)
-    async def delete(self, button: disnake.ui.Button, inter: disnake.MessageInteraction):
-        if self.author.id == inter.author.id or inter.permissions.manage_messages:
-            await inter.response.defer()
-            await inter.delete_original_response()
-
-
 @plugin.listener("on_message")
 async def message(message: disnake.Message):
     if message.author.bot:
@@ -106,9 +57,11 @@ async def message(message: disnake.Message):
         data = await codeberg.get_file(repo, path, start_line, end_line)
 
         if data is None:
-            return        
+            return
+    
+        view = ui.Delete(message.author)
         
-        await message.channel.send(data)
+        await message.channel.send(data, view=view)
         await messages.suppress_embeds(plugin.bot, message)
 
     elif comment:
@@ -123,7 +76,10 @@ async def message(message: disnake.Message):
             return
         
         embed = make_embed(data)
-        view = ShowLess(data, message.author)
+        view = ui.Delete(message.author)
+        
+        if len(data.body) > LIMIT_CHAR:
+            view = ui.ShowLess(data, message.author, make_embed)
 
         await message.channel.send(embed=embed,  view=view)
         await messages.suppress_embeds(plugin.bot, message)
@@ -139,7 +95,11 @@ async def message(message: disnake.Message):
             return
         
         embed = make_embed(data)
-        view = ShowLess(data, message.author)
+
+        view = ui.Delete(message.author)
+        
+        if len(data.body) > LIMIT_CHAR:
+            view = ui.ShowLess(data, message.author, make_embed)
 
         await message.channel.send(embed=embed,  view=view)
         await messages.suppress_embeds(plugin.bot, message)
@@ -175,7 +135,7 @@ def make_embed(data: CodebergPI | CodebergIC, show_less = False) -> disnake.Embe
                 body = f"{body[:LIMIT_CHAR]}..."
 
         embed = disnake.Embed(
-            title = f"{emoji} [{data.full_name}] {data.title}",
+            title = f"{emoji} #{data.id} [{data.full_name}] {data.title}",
             description = body,
             color = color       
         )

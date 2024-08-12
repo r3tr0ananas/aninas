@@ -102,6 +102,7 @@ class CodebergPI:
 
     owner: CodebergUser = field(default=None)
 
+    id: int = field(default=None)
     type: str = field(default=None)
     title: str = field(default=None)
     body: str = field(default=None)
@@ -116,10 +117,12 @@ class CodebergPI:
 
     def __post_init__(self):
         self.owner = CodebergUser(self.data.get("user"))
+
+        self.id = self.data.get("number")
         self.type = self.data.get("html_url").split("/")[5]
         self.title = self.data.get("title")
         self.body = self.data.get("body")
-        self.labels = [label["name"] for label in self.data.get("labels")]
+        self.labels = [f"`{label['name']}`" for label in self.data.get("labels")]
         self.state = self.data.get("state")
         self.created_at = self.data.get("created_at")
         self.merged = self.data.get("pull_request", {}).get("merged")
