@@ -1,7 +1,14 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    pass
+
 import disnake
 from disnake.ext import plugins, commands
 
-from ..utils import sata_andagi
+from ..utils import sata_andagi, embeds
+from ..constant import Emojis
 
 plugin = plugins.Plugin()
 
@@ -26,22 +33,22 @@ async def search(
 ):
     await inter.response.defer()
 
-    metadata = await sata_andagi.search(query)
+    data = await sata_andagi.search(query)
 
-    if metadata is None:
-        embed = disnake.Embed(
+    if data is None:
+        embed = embeds.error_embed(                 
             title = "OsakerNotFound", 
-            description = "No osaker found based on your query 😔",
-            color=0xFF0000
+            description = f"No osaker found based on your query {Emojis.pensive}",
         )
 
         await inter.followup.send(embed=embed)
         return
 
-    await inter.followup.send(metadata.url)
+    await inter.followup.send(data.url)
 
 @search.autocomplete("query")
 async def query_autocomp(inter: disnake.ApplicationCommandInteraction, query: str):
     return await sata_andagi.autocomplete(query)
+
 
 setup, teardown = plugin.create_extension_handlers()

@@ -33,6 +33,9 @@ dev = [
 [tool.setuptools.dynamic]
 version = { attr = "aninas.__version__" }
 
+[tool.ruff.lint]
+ignore = ["F403"]
+
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"

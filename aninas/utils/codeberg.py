@@ -17,7 +17,7 @@ __all__ = (
     "get_repo",
     "get_user",
     "get_pi",
-    "get_code_snippet"
+    "get_file"
 )
 
 async def get_repo(user: str, repo: str) -> CodebergRepo:

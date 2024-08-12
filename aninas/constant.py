@@ -12,6 +12,7 @@ class Emojis:
 
     star = "⭐"
     fork = "⑂"
+    pensive = "😔"
 
 class Colours:
     error = 0xFF0000

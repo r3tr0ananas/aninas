@@ -96,7 +96,7 @@ async def user(
     if data.orgs != []:
         embed.add_field(
             name = "Organizations",
-            value = f" | ".join([f"[{org.username}]({org.user_url})" for org in data.joined_orgs])
+            value = " | ".join([f"[{org.username}]({org.user_url})" for org in data.joined_orgs])
         )
 
     if data.website != "":

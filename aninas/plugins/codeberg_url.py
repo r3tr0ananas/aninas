@@ -52,7 +52,7 @@ class ShowLess(disnake.ui.View):
                 await inter.response.send_message("There is nothing to shorten", ephemeral=True)
                 return
 
-            embed = await make_embed(self.data, True)
+            embed = make_embed(self.data, True)
 
             await inter.response.edit_message(embed=embed, view=ShowMore(self.data, self.author))
         else:
@@ -77,7 +77,7 @@ class ShowMore(disnake.ui.View):
     @disnake.ui.button(emoji="⬇️", label="Show more", style=disnake.ButtonStyle.green)
     async def show_more(self, button: disnake.ui.Button, inter: disnake.MessageInteraction):
         if self.author.id == inter.author.id or inter.permissions.manage_messages:  
-            embed = await make_embed(self.data)
+            embed = make_embed(self.data)
 
             await inter.response.edit_message(embed=embed, view=ShowLess(self.data, self.author))
 
@@ -93,7 +93,8 @@ async def message(message: disnake.Message):
     if message.author.bot:
         return
     
-    links = messages.extract_urls(message.content)
+    links = list(messages.extract_urls(message.content))
+    links = list(dict.fromkeys(links))
 
     for link in links:
     
@@ -110,7 +111,7 @@ async def message(message: disnake.Message):
             data = await codeberg.get_file(repo, path, start_line, end_line)
 
             if data is None:
-                continue
+                continue        
             
             await message.channel.send(data)
             await messages.suppress_embeds(plugin.bot, message)
@@ -126,7 +127,7 @@ async def message(message: disnake.Message):
             if data is None:
                 continue
             
-            embed = await make_embed(data)
+            embed = make_embed(data)
             view = ShowLess(data, message.author)
 
             await message.channel.send(embed=embed,  view=view)
@@ -142,23 +143,23 @@ async def message(message: disnake.Message):
             if data is None:
                 continue
             
-            embed = await make_embed(data)
+            embed = make_embed(data)
             view = ShowLess(data, message.author)
 
             await message.channel.send(embed=embed,  view=view)
             await messages.suppress_embeds(plugin.bot, message)
 
 
-async def make_embed(data: CodebergPI | CodebergIC, show_less = False) -> disnake.Embed:
+def make_embed(data: CodebergPI | CodebergIC, show_less = False) -> disnake.Embed:
     if isinstance(data, CodebergPI):
         if data.type == "pulls":
-            if data.state == "open" and data.draft == False:
+            if data.state == "open" and not data.draft:
                 emoji = Emojis.pulls_open
                 color = Colours.pulls_open
-            elif data.state == "closed" and data.merged == True:
+            elif data.state == "closed" and data.merged:
                 emoji = Emojis.pulls_merged
                 color = Colours.pulls_merged
-            elif data.state == "open" and data.draft == True:
+            elif data.state == "open" and data.draft:
                 emoji = Emojis.pulls_draft
                 color = Colours.pulls_draft
             else:

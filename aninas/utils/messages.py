@@ -38,7 +38,7 @@ async def suppress_embeds(
         await message.edit(suppress_embeds=True)
     except disnake.NotFound:
         return False
-    except disnake.Forbidden as e:
+    except disnake.Forbidden:
         return False
     return True
 
