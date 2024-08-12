@@ -191,7 +191,7 @@ async def make_comment_embed(data: CodebergIC, show_less = False) -> disnake.Emb
     embed = disnake.Embed(
         title = f"Comment: [{data.issue.full_name}] {data.issue.title}",
         description = body,
-        color = 0x33393e
+        color = Colours.pulls_draft
     )
 
     embed.url = data.html_url
