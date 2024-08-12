@@ -10,7 +10,8 @@ __all__ = (
     "CodebergRepo",
     "CodebergOrg",
     "CodebergUser",
-    "CodebergPI"
+    "CodebergPI",
+    "CodebergIC"
 )
 
 @dataclass
@@ -111,6 +112,8 @@ class CodebergPI:
     draft: bool = field(default=None)
     html_url: str = field(default=None)
 
+    full_name: str = field(default=None)
+
     def __post_init__(self):
         self.owner = CodebergUser(self.data.get("user"))
         self.type = self.data.get("html_url").split("/")[5]
@@ -121,4 +124,24 @@ class CodebergPI:
         self.created_at = self.data.get("created_at")
         self.merged = self.data.get("pull_request", {}).get("merged")
         self.draft = self.data.get("pull_request", {}).get("draft")
+        self.html_url = self.data.get("html_url")
+
+        self.full_name = self.data.get("repository", {}).get("full_name")
+
+@dataclass
+class CodebergIC:
+    data: dict = field(repr=False)
+
+    owner: CodebergUser = field(default=None)
+    issue: CodebergPI = field(default=False)
+
+    body: str = field(default=None)
+    created_at: str = field(default=None)
+    html_url: str = field(default=None)
+
+    def __post_init__(self):
+        self.owner = CodebergUser(self.data.get("user"))
+
+        self.body = self.data.get("body")
+        self.created_at = self.data.get("created_at")
         self.html_url = self.data.get("html_url")

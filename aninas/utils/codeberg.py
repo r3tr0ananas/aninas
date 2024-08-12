@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 import httpx
 
 from ..constant import CODEBERG, CODEBERG_KEY
-from ..types import CodebergRepo, CodebergUser, CodebergPI
+from ..types import CodebergRepo, CodebergUser, CodebergPI, CodebergIC
 
 client = httpx.AsyncClient(headers={"Authorization": f"token {CODEBERG_KEY}"})
 
@@ -52,3 +52,17 @@ async def get_pi(user: str, repo: str, number: int) -> Optional[CodebergPI]:
         return None
     
     return CodebergPI(data)
+
+async def get_comment(user: str, repo: str, number: int, comment: int) -> Optional[CodebergIC]:
+    request = await client.get(f"{CODEBERG}/repos/{user}/{repo}/issues/comments/{comment}")
+    if request.status_code == 204: # NOTE: i don't really know why this happens
+        return None
+
+    data = request.json()
+
+    if "message" in data:
+        return None
+    
+    pi = await get_pi(user, repo, number)
+    
+    return CodebergIC(data, issue=pi)

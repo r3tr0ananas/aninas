@@ -2,7 +2,8 @@ import disnake
 from disnake.ext import plugins, commands
 from datetime import datetime
 
-from ..utils import codeberg as cb
+from ..utils import codeberg as cb, embeds
+from ..constant import Colours, Emojis
 
 plugin = plugins.Plugin()
 
@@ -22,22 +23,18 @@ async def repo(
     data = await cb.get_repo(user, repo)
 
     if isinstance(data, str):
-        embed = disnake.Embed(
-            title = f"Error while requesting: {user}/{repo}",
-            description = data,
-            color=0xFF0000
-        )
+        embed = embeds.error_embed(f"Error while requesting: {user}/{repo}", data)
 
         await inter.followup.send(embed=embed)
         return      
 
     embed = disnake.Embed(
-        description = 
-        f"""### [{data.name}]({data.url})
-        {data.description}
-        """, 
-        color=0xDE3163
+        title = data.name,
+        description = data.description,
+        color = Colours.cerise
     )
+
+    embed.url = data.url
 
     embed.set_author(
         name = data.owner.username,
@@ -48,7 +45,7 @@ async def repo(
     created_at = datetime.strptime(data.created_at, "%Y-%m-%dT%H:%M:%SZ").strftime("%d/%m/%Y")
     last_pushed = datetime.strptime(data.updated_at, "%Y-%m-%dT%H:%M:%SZ").strftime("%d/%m/%Y at %H:%M")
 
-    embed.set_footer(text = f"⑂ {data.forks} • ⭐ {data.stars} | Created: {created_at} • Last Commit: {last_pushed}")
+    embed.set_footer(text = f"{Emojis.fork} {data.forks} • {Emojis.star} {data.stars} | Created: {created_at} • Last Commit: {last_pushed}")
 
     await inter.followup.send(embed=embed)
 
@@ -63,11 +60,7 @@ async def user(
     data, repo_amount = await cb.get_user(user)
 
     if isinstance(data, str):
-        embed = disnake.Embed(
-            title = f"Error while requesting: {user}",
-            description = data,
-            color=0xFF0000
-        )
+        embed = embeds.error_embed(f"Error while requesting: {user}", data)
 
         await inter.followup.send(embed=embed)
         return      
@@ -78,12 +71,12 @@ async def user(
         username = f"{username} | {data.pronouns}"
 
     embed = disnake.Embed(
-        description = 
-        f"""### [{username}]({data.user_url})
-        {data.description}
-        """, 
-        color=0xDE3163
+        title = username,
+        description = data.description,
+        color = Colours.cerise
     )
+
+    embed.url = data.user_url
 
     embed.add_field(
         name = "Followers",
