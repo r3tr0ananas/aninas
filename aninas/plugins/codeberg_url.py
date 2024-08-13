@@ -22,7 +22,7 @@ CODEBERG_ISSUE_LINK_REGEX = re.compile(
 )
 
 CODEBERG_RE = re.compile(
-    r"https?:\/\/codeberg.org\/(?P<repo>[a-zA-Z0-9-]+\/[\w.-]+)\/src\/branch\/(?P<path>[^#>]+)(\?[^#>]+)?"
+    r"https?:\/\/codeberg.org\/(?P<repo>[a-zA-Z0-9-]+\/[\w.-]+)\/src\/(?P<path>[^#>]+)(\?[^#>]+)?"
     r"(?:#L(?P<start_line>\d+)-L(?P<end_line>\d+))?"
 )
 
