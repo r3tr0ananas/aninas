@@ -11,7 +11,6 @@ import udatetime
 import re
 
 from disnake.ext import commands
-from dateutil import tz
 
 DISCORD_CLIENT_URL_REGEX = re.compile(r"(?P<url><?https?:\/\/[^\s<]+[^<.,:;'\"\]\s]\>?)", re.IGNORECASE)
 DISCORD_CLIENT_URL_WRAPPED_REGEX = re.compile(r"(?<=\<)https?:\/\/[^\s>]+(?=\>)", re.IGNORECASE)
@@ -45,9 +44,5 @@ async def suppress_embeds(
         return False
     return True
 
-def fix_timestamp(timestamp: str) -> datetime:
-    timestamp: datetime = udatetime.from_string(timestamp)
-    timestamp = timestamp.replace(tzinfo=tz.UTC)
-    timestamp = timestamp.astimezone(tz.tzlocal())
-
-    return timestamp
+def timestamp(timestamp: str) -> datetime:
+    return udatetime.from_string(timestamp)

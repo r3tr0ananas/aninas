@@ -21,8 +21,7 @@ dependencies = [
     "httpx",
     "python-decouple",
     "psutil",
-    "udatetime",
-    "python-dateutil"
+    "udatetime"
 ]
 
 dynamic = ["version"]

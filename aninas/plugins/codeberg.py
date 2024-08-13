@@ -1,4 +1,5 @@
 import disnake
+
 from disnake.ext import plugins, commands
 
 from ..utils import codeberg as cb, embeds, messages
@@ -41,8 +42,8 @@ async def repo(
         icon_url = data.owner.avatar
     )
 
-    created_at = messages.fix_timestamp(data.created_at).strftime("%d/%m/%Y")
-    last_pushed = messages.fix_timestamp(data.updated_at).strftime("%d/%m/%Y at %H:%M")
+    created_at = messages.timestamp(data.created_at).strftime("%d/%m/%Y UTC")
+    last_pushed = messages.timestamp(data.updated_at).strftime("%d/%m/%Y at %H:%M UTC")
 
     embed.set_footer(text = f"{Emojis.fork} {data.forks} • {Emojis.star} {data.stars} | Created: {created_at} • Last Commit: {last_pushed}")
 
@@ -106,7 +107,7 @@ async def user(
 
     embed.set_thumbnail(data.avatar)
 
-    created = messages.fix_timestamp(data.created).strftime("%d/%m/%Y")
+    created = messages.timestamp(data.created).strftime("%d/%m/%Y UTC")
 
     embed.set_footer(text = f"Joined: {created}")
 

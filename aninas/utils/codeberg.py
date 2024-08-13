@@ -55,6 +55,7 @@ async def get_pi(user: str, repo: str, number: int) -> Optional[CodebergPI]:
         return None
 
     data = request.json()
+
     if data["html_url"].split("/")[5]:
         pr_request = await client.get(f"{CODEBERG}/repos/{user}/{repo}/pulls/{number}")
         pr_data = pr_request.json()
@@ -96,7 +97,6 @@ async def get_file(repo: str, path: int, start_line: int, end_line: int) -> Opti
     content = base64.b64decode(data["content"]).decode()
 
     return _code_snippet(file_path, content, start_line, end_line)
-
 
 async def _get_ref(repo: str, path: str) -> Optional[Tuple[str, str]]:
     request = await client.get(f"{CODEBERG}/repos/{repo}/branches")
