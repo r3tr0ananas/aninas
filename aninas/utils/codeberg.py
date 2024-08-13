@@ -101,11 +101,6 @@ async def get_file(repo: str, path: int, start_line: int, end_line: int) -> Opti
 async def _get_ref(repo: str, path: str) -> Optional[Tuple[str, str]]:
     type, rest = path.split("/", 1)
 
-    if type == "commit":    
-        ref, file_path = rest.split("/", 1)
-
-        return ref, file_path
-
     request = await client.get(f"{CODEBERG}/repos/{repo}/branches")
     data = request.json()
 
