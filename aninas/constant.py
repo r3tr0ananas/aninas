@@ -10,6 +10,8 @@ class Emojis:
     issues_open = "<:issues_open:1272272998820483144>"
     issues_closed = "<:issues_closed:1272272990754836641>"
 
+    loading_cat = "<a:loading_cat:1273006525845082275>"
+
     star = "⭐"
     fork = "⑂"
     pensive = "😔"
