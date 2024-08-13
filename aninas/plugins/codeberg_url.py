@@ -5,12 +5,12 @@ if TYPE_CHECKING:
     ...
 
 from disnake.ext import plugins
-from datetime import datetime
 
 from ..types import CodebergPI, CodebergIC
 from ..constant import Emojis, Colours
 from ..utils import codeberg, messages, ui
 
+import udatetime
 import disnake
 import re
 
@@ -154,7 +154,7 @@ def make_embed(data: CodebergPI | CodebergIC, show_less = False) -> disnake.Embe
             )
         
         if data.due_date is not None and not show_less:
-            due_date = int(datetime.strptime(data.due_date, "%Y-%m-%dT%H:%M:%SZ").timestamp())
+            due_date = int(udatetime.from_string(data.due_date).timestamp())
 
             embed.add_field(
                 name = "Due Date",
@@ -184,7 +184,7 @@ def make_embed(data: CodebergPI | CodebergIC, show_less = False) -> disnake.Embe
                 data.assets
             )
         
-        created_at = datetime.strptime(data.created_at, "%Y-%m-%dT%H:%M:%SZ").strftime("%d/%m/%Y %H:%M")
+        created_at = udatetime.from_string(data.created_at).strftime("%d/%m/%Y %H:%M")
 
         embed.set_footer(text=f"Created: {created_at}")
 
@@ -210,7 +210,7 @@ def make_embed(data: CodebergPI | CodebergIC, show_less = False) -> disnake.Embe
         icon_url = data.owner.avatar
     )
 
-    created_at = datetime.strptime(data.created_at, "%Y-%m-%dT%H:%M:%SZ").strftime("%d/%m/%Y %H:%M")
+    created_at = udatetime.from_string(data.created_at  ).strftime("%d/%m/%Y %H:%M")
 
     embed.set_footer(text=f"Commented on: {created_at}")
 
