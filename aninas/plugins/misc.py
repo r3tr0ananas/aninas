@@ -22,7 +22,7 @@ stats = Stats()
 
 BOT_START_TIME = int(datetime.now().timestamp())
 
-@plugin.slash_command()
+@plugin.slash_command(description="Status of aninas")
 async def status(inter: disnake.CommandInteraction):
     embed = disnake.Embed(
         title = "Status"
