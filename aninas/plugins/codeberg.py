@@ -31,7 +31,8 @@ async def repo(
     embed = disnake.Embed(
         title = data.name,
         description = data.description,
-        color = Colours.cerise
+        color = Colours.cerise,
+        timestamp = messages.timestamp(data.created_at)
     )
 
     embed.url = data.url
@@ -42,10 +43,7 @@ async def repo(
         icon_url = data.owner.avatar
     )
 
-    created_at = messages.timestamp(data.created_at).strftime("%d/%m/%Y UTC")
-    last_pushed = messages.timestamp(data.updated_at).strftime("%d/%m/%Y at %H:%M UTC")
-
-    embed.set_footer(text = f"{Emojis.fork} {data.forks} • {Emojis.star} {data.stars} | Created: {created_at} • Last Commit: {last_pushed}")
+    embed.set_footer(text = f"{Emojis.fork} {data.forks} • {Emojis.star} {data.stars} | Created")
 
     await inter.followup.send(embed=embed)
 
@@ -70,10 +68,13 @@ async def user(
     if data.pronouns != "":
         username = f"{username} | {data.pronouns}"
 
+    created = messages.timestamp(data.created)
+
     embed = disnake.Embed(
         title = username,
         description = data.description,
-        color = Colours.cerise
+        color = Colours.cerise,
+        timestamp = created
     )
 
     embed.url = data.user_url
@@ -107,9 +108,7 @@ async def user(
 
     embed.set_thumbnail(data.avatar)
 
-    created = messages.timestamp(data.created).strftime("%d/%m/%Y UTC")
-
-    embed.set_footer(text = f"Joined: {created}")
+    embed.set_footer(text = f"Joined")
 
     await inter.followup.send(embed=embed)
 

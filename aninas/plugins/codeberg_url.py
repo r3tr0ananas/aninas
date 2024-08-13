@@ -79,7 +79,7 @@ async def message(message: disnake.Message):
         if len(data.body) > LIMIT_CHAR:
             view = ui.ShowLess(data, message.author, make_embed)
 
-        await message.channel.send(embed=embed,  view=view)
+        await message.channel.send(embed=embed, view=view)
         await messages.suppress_embeds(plugin.bot, message)
 
     elif regex_match:
@@ -91,103 +91,20 @@ async def message(message: disnake.Message):
 
         if data is None:
             return
-        
+
         embed = make_embed(data)
 
         view = ui.Delete(message.author)
-        
+
         if len(data.body) > LIMIT_CHAR:
             view = ui.ShowLess(data, message.author, make_embed)
 
         await message.channel.send(embed=embed, view=view)
         await messages.suppress_embeds(plugin.bot, message)
 
-
 def make_embed(data: CodebergPI | CodebergIC, show_less = False) -> disnake.Embed:
     if isinstance(data, CodebergPI):
-        if data.type == "pulls":
-            if data.state == "open" and not data.draft:
-                emoji = Emojis.pulls_open
-                color = Colours.pulls_open
-            elif data.state == "closed" and data.merged:
-                emoji = Emojis.pulls_merged
-                color = Colours.pulls_merged
-            elif data.state == "open" and data.draft:
-                emoji = Emojis.pulls_draft
-                color = Colours.pulls_draft
-            else:
-                emoji = Emojis.pulls_closed
-                color = Colours.pulls_closed
-        else:
-            if data.state == "open":
-                emoji = Emojis.issues_open
-                color = Colours.issues_open
-            elif data.state == "closed":
-                emoji = Emojis.issues_closed
-                color = Colours.issues_closed   
-
-        body = data.body    
-        
-        if show_less:
-            if len(body) > LIMIT_CHAR:
-                body = f"{body[:LIMIT_CHAR]}..."
-
-        embed = disnake.Embed(
-            title = f"{emoji} [{data.full_name}] #{data.id} {data.title}",
-            description = body,
-            color = color       
-        )
-
-        embed.url = data.html_url
-
-        embed.set_author(
-            name = data.owner.username,
-            url = data.owner.user_url,
-            icon_url = data.owner.avatar
-        )
-
-        if data.labels != [] and not show_less:
-            embed.add_field(
-                name = "Labels",
-                value = " | ".join(data.labels)
-            )
-        
-        if data.due_date is not None and not show_less:
-            due_date = int(messages.timestamp(data.due_date).timestamp())
-
-            embed.add_field(
-                name = "Due Date",
-                value = f"<t:{due_date}>"
-            )
-        
-        if data.milestone is not None and not show_less:
-            embed.add_field(
-                name = "Milestone",
-                value = data.milestone
-            )
-        
-        if data.requsted_reviewers is not None and not show_less:
-            embed.add_field(
-                name = "Requested Reviewers",
-                value = " | ".join([f"[{user.username}]({user.user_url})" for user in data.requsted_reviewers])
-            )
-
-        if data.assginees is not None and not show_less:
-            embed.add_field(
-                name = "Assignees",
-                value = " | ".join([f"[{user.username}]({user.user_url})" for user in data.assginees])
-            )
-
-        if data.assets != [] and not show_less:
-            embed.set_image(
-                data.assets
-            )
-        
-        created_at = messages.timestamp(data.created_at).strftime("%d/%m/%Y %H:%M UTC")
-
-        embed.set_footer(text=f"Created: {created_at}")
-
-        return embed
+        return make_long_embed(data, show_less)
 
     body = data.body
 
@@ -198,7 +115,8 @@ def make_embed(data: CodebergPI | CodebergIC, show_less = False) -> disnake.Embe
     embed = disnake.Embed(
         title = f"Comment: [{data.issue.full_name}] {data.issue.title}",
         description = body,
-        color = Colours.pulls_draft
+        color = Colours.pulls_draft,
+        timestamp = messages.timestamp(data.created_at)
     )
 
     embed.url = data.html_url
@@ -209,9 +127,92 @@ def make_embed(data: CodebergPI | CodebergIC, show_less = False) -> disnake.Embe
         icon_url = data.owner.avatar
     )
 
-    created_at = messages.timestamp(data.created_at).strftime("%d/%m/%Y %H:%M UTC")
+    embed.set_footer(text=f"Commented on")
 
-    embed.set_footer(text=f"Commented on: {created_at}")
+    return embed
+
+def make_long_embed(data: CodebergPI, show_less) -> disnake.Embed:
+    if data.type == "pulls":
+        if data.state == "open" and not data.draft:
+            emoji = Emojis.pulls_open
+            color = Colours.pulls_open
+        elif data.state == "closed" and data.merged:
+            emoji = Emojis.pulls_merged
+            color = Colours.pulls_merged
+        elif data.state == "open" and data.draft:
+            emoji = Emojis.pulls_draft
+            color = Colours.pulls_draft
+        else:
+            emoji = Emojis.pulls_closed
+            color = Colours.pulls_closed
+    else:
+        if data.state == "open":
+            emoji = Emojis.issues_open
+            color = Colours.issues_open
+        elif data.state == "closed":
+            emoji = Emojis.issues_closed
+            color = Colours.issues_closed   
+
+    body = data.body    
+    
+    if show_less:
+        if len(body) > LIMIT_CHAR:
+            body = f"{body[:LIMIT_CHAR]}..."
+
+    embed = disnake.Embed(
+        title = f"{emoji} [{data.full_name}] #{data.id} {data.title}",
+        description = body,
+        color = color,
+        timestamp = messages.timestamp(data.created_at) 
+    )
+
+    embed.url = data.html_url
+
+    embed.set_author(
+        name = data.owner.username,
+        url = data.owner.user_url,
+        icon_url = data.owner.avatar
+    )
+
+    if not show_less:
+        if data.labels != []:
+            embed.add_field(
+                name = "Labels",
+                value = " | ".join(data.labels)
+            )
+        
+        if data.due_date is not None:
+            due_date = int(messages.timestamp(data.due_date).timestamp())
+
+            embed.add_field(
+                name = "Due Date",
+                value = f"<t:{due_date}>"
+            )
+        
+        if data.milestone is not None:
+            embed.add_field(
+                name = "Milestone",
+                value = data.milestone
+            )
+
+        if data.requsted_reviewers is not None:
+            embed.add_field(
+                name = "Requested Reviewers",
+                value = " | ".join([f"[{user.username}]({user.user_url})" for user in data.requsted_reviewers])
+            )
+
+        if data.assginees is not None:
+            embed.add_field(
+                name = "Assignees",
+                value = " | ".join([f"[{user.username}]({user.user_url})" for user in data.assginees])
+            )
+
+        if data.assets is not None:
+            embed.set_image(
+                data.assets
+            )
+
+    embed.set_footer(text=f"Created at")
 
     return embed
 

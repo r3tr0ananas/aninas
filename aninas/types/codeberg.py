@@ -114,6 +114,7 @@ class CodebergPI:
     due_date: str = field(default=None)
     milestone: str = field(default=None)
     assginees: List[CodebergUser] = field(default=None)
+    assets: str = field(default=None)
 
     merged: bool = field(default=None)
     draft: bool = field(default=None)
@@ -133,18 +134,18 @@ class CodebergPI:
         self.created_at = self.data.get("created_at")
         self.html_url = self.data.get("html_url")
         self.due_date = self.data.get("due_date")
-        self.milestone = self.data.get("milestone")
-        self.assginees = self.data.get("assignees")
-        self.assets = self.data.get("assets")
+        milestone = self.data.get("milestone")
+        assginees = self.data.get("assignees")
+        assets = self.data.get("assets")
 
-        if self.milestone is not None:
-            self.milestone = self.milestone.get("title")
+        if milestone is not None:
+            self.milestone = milestone.get("title")
 
-        if self.assginees is not None:
-            self.assginees = [CodebergUser(user) for user in self.assginees]
+        if assginees is not None:
+            self.assginees = [CodebergUser(user) for user in assginees]
         
-        if self.assets is not None:
-            for asset in self.assets:
+        if assets is not None:
+            for asset in assets:
                 if asset["name"].split(".")[-1] in ["png", "jpeg", "jpg"]:
                     self.assets = asset["browser_download_url"]
 
