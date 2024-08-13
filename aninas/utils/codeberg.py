@@ -103,7 +103,6 @@ async def _get_ref(repo: str, path: str) -> Optional[Tuple[str, str]]:
 
     if type == "commit":    
         ref, file_path = rest.split("/", 1)
-        print(ref, file_path)
 
         return ref, file_path
 
