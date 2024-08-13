@@ -114,7 +114,7 @@ class CodebergPI:
     due_date: str = field(default=None)
     milestone: str = field(default=None)
     assginees: List[CodebergUser] = field(default=None)
-    assets: str = field(default=None)
+    image: str = field(default=None)
 
     merged: bool = field(default=None)
     draft: bool = field(default=None)
@@ -146,8 +146,12 @@ class CodebergPI:
         
         if assets is not None:
             for asset in assets:
-                if asset["name"].split(".")[-1] in ["png", "jpeg", "jpg"]:
-                    self.assets = asset["browser_download_url"]
+                file_ext = asset["name"].split(".")[-1]
+
+                if file_ext in ["png", "jpeg", "jpg"]:
+                    self.image = asset["browser_download_url"]
+                    
+                    break
 
         self.full_name = self.data.get("repository").get("full_name")
 

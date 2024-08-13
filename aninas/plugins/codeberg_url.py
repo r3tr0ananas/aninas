@@ -207,9 +207,9 @@ def make_long_embed(data: CodebergPI, show_less) -> disnake.Embed:
                 value = " | ".join([f"[{user.username}]({user.user_url})" for user in data.assginees])
             )
 
-        if data.assets is not None:
+        if data.image is not None:
             embed.set_image(
-                data.assets
+                data.image
             )
 
     embed.set_footer(text=f"Created at")
