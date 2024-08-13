@@ -50,5 +50,4 @@ async def search(
 async def query_autocomp(inter: disnake.ApplicationCommandInteraction, query: str):
     return await sata_andagi.autocomplete(query)
 
-
 setup, teardown = plugin.create_extension_handlers()

@@ -1,8 +1,10 @@
 import disnake
 from disnake.ext import plugins, commands
 
-from ..utils import agac as agac_utils
+from ..utils import agac as agac_utils, embeds
 from ..types import AGAC
+
+from ..constant import Colours
 
 plugin = plugins.Plugin()
 
@@ -17,7 +19,7 @@ async def random(inter: disnake.CommandInteraction):
 
     metadata = await agac_utils.get_random()
 
-    embed = await makeEmbed(metadata)
+    embed = await make_embed(metadata)
 
     await inter.followup.send(embed=embed)
 
@@ -32,17 +34,16 @@ async def search(
     metadata = await agac_utils.search(query)
 
     if metadata is None:
-        embed = disnake.Embed(
+        embed = embeds.error_embed(
             title = "ImageNotFound", 
             description = "No image found based on your query 😔",
-            color=0xFF0000
         )
 
         await inter.followup.send(embed=embed)
         return
 
 
-    embed = await makeEmbed(metadata)
+    embed = await make_embed(metadata)
 
     await inter.followup.send(embed=embed)
 
@@ -50,18 +51,18 @@ async def search(
 async def query_autocomp(inter: disnake.ApplicationCommandInteraction, query: str):
     return await agac_utils.autocomplete(query)
 
-async def makeEmbed(metadata: AGAC) -> disnake.Embed:
+async def make_embed(metadata: AGAC) -> disnake.Embed:
     authors = [f"[{author.name}](https://github.com/{author.github})" for author in metadata.authors]
 
     embed = disnake.Embed(
         title = metadata.name, 
         description = 
-        f"""
+        embeds.line_fix(f"""
         ## Metadata
         - **Category**: `{metadata.category.capitalize()}`
         - **Authors**: {", ".join(authors)}
-        """,            
-        color=0xDE3163      
+        """),            
+        color = Colours.cerise
     )
 
     embed.set_image(url = metadata.image)
