@@ -2,7 +2,7 @@ import disnake
 
 from disnake.ext import plugins, commands
 
-from ..utils import codeberg as cb, embeds, messages
+from ..utils import codeberg as cb, embeds, messages, ui
 from ..constant import Colours, Emojis
 
 plugin = plugins.Plugin()
@@ -26,7 +26,7 @@ async def repo(
         embed = embeds.error_embed(f"Error while requesting: {user}/{repo}", data)
 
         await inter.followup.send(embed=embed)
-        return      
+        return
 
     embed = disnake.Embed(
         title = data.name,
@@ -45,7 +45,9 @@ async def repo(
 
     embed.set_footer(text = f"{Emojis.fork} {data.forks} • {Emojis.star} {data.stars} | Created")
 
-    await inter.followup.send(embed=embed)
+    view = ui.Delete(inter.author)
+
+    await inter.followup.send(embed=embed, view=view)
 
 @codeberg.sub_command(description="Search for a repo on Codeberg")
 @commands.cooldown(1, 3, commands.BucketType.user)
@@ -110,6 +112,8 @@ async def user(
 
     embed.set_footer(text = f"Joined")
 
-    await inter.followup.send(embed=embed)
+    view = ui.Delete(inter.author)
+
+    await inter.followup.send(embed=embed, view=view)
 
 setup, teardown = plugin.create_extension_handlers()
