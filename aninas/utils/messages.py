@@ -2,13 +2,16 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Optional, Generator
+    from typing import Optional
+    from datetime import datetime
 
 import asyncio
 import disnake
+import udatetime
 import re
 
 from disnake.ext import commands
+from dateutil import tz
 
 DISCORD_CLIENT_URL_REGEX = re.compile(r"(?P<url><?https?:\/\/[^\s<]+[^<.,:;'\"\]\s]\>?)", re.IGNORECASE)
 DISCORD_CLIENT_URL_WRAPPED_REGEX = re.compile(r"(?<=\<)https?:\/\/[^\s>]+(?=\>)", re.IGNORECASE)
@@ -41,3 +44,10 @@ async def suppress_embeds(
     except disnake.Forbidden:
         return False
     return True
+
+def fix_timestamp(timestamp: str) -> datetime:
+    timestamp: datetime = udatetime.from_string(timestamp)
+    timestamp = timestamp.replace(tzinfo=tz.UTC)
+    timestamp = timestamp.astimezone(tz.tzlocal())
+
+    return timestamp
