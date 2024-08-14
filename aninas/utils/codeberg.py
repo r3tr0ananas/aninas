@@ -24,8 +24,8 @@ async def get_repo(user: str, repo: str) -> CodebergRepo:
     request = await client.get(f"{CODEBERG}/repos/{user}/{repo}")
     data = request.json()
 
-    if "errors" in data:
-        return data["errors"][0]
+    if "message" in data:
+        return data["message"]
 
     data = CodebergRepo(data)
 

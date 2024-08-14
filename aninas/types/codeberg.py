@@ -19,14 +19,19 @@ class CodebergRepo:
     data: dict = field(repr=False)  
 
     owner: CodebergUser = field(default=None)
-    
+
     name: str = field(default=None)
     description: str = field(default=None)
     url: str = field(default=None)
     stars: int = field(default=None)
     forks: int = field(default=None)
+    watchers: int = field(default=None)
     created_at: str = field(default=None)
     updated_at: str = field(default=None)
+
+    fork: bool = field(default=None)
+    archived: bool = field(default=None)
+    icon: str = field(default=None)
 
     def __post_init__(self):
         self.owner = CodebergUser(self.data.get("owner", {}))
@@ -38,6 +43,13 @@ class CodebergRepo:
         self.forks = self.data.get("forks_count")
         self.created_at = self.data.get("created_at")
         self.updated_at = self.data.get("updated_at")
+        
+        self.fork = self.data.get("fork")
+        self.archived = self.data.get("archived")
+        self.icon = self.data.get("avatar_url")
+
+        if self.icon == "":
+            self.icon = self.owner.avatar
 
 @dataclass
 class CodebergOrg:

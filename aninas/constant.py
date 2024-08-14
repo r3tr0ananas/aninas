@@ -10,10 +10,17 @@ class Emojis:
     issues_open = "<:issues_open:1272272998820483144>"
     issues_closed = "<:issues_closed:1272272990754836641>"
 
+    repo = "<:repo:1273313627415380109>"
+    follow = "<:follow:1273331809874214972>"
+    fork = "<:fork:1273332307692093470>"
+
+    link = "<:link:1273332935554236520>"
+
     loading_cat = "<a:loading_cat:1273006525845082275>"
 
+    eye = "👁️"
     star = "⭐"
-    fork = "⑂"
+    fork_footer = "⑂"
     pensive = "😔"
     notepad = "🗒️"
     zap = "⚡"
@@ -35,5 +42,5 @@ class Colours:
 AGAC_URL = config("AGAC_URL", default = "https://api.ananas.moe/agac/v1")
 SATA_ANDAGI = config("SATA_ANDAGI", default = "https://sata-andagi.moe/api")
 CODEBERG = config("CODEBERG", default = "https://codeberg.org/api/v1")
-CODEBERG_KEY = config("CODEBERG_KEY", default = "")
+CODEBERG_KEY = config("CODEBERG_KEY", cast = str)
 BOT_TOKEN = config("BOT_TOKEN", cast = str)

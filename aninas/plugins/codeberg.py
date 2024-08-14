@@ -28,8 +28,16 @@ async def repo(
         await inter.followup.send(embed=embed)
         return
 
+    name = f"{Emojis.repo} {data.name}"
+
+    if data.fork:
+        name = f"{Emojis.fork} {data.name}"
+
+    if data.archived:
+        name = f"{name} [archived]"
+
     embed = disnake.Embed(
-        title = data.name,
+        title = name,
         description = data.description,
         color = Colours.cerise,
         timestamp = messages.timestamp(data.created_at)
@@ -40,10 +48,10 @@ async def repo(
     embed.set_author(
         name = data.owner.username,
         url = data.owner.user_url,
-        icon_url = data.owner.avatar
+        icon_url = data.icon
     )
 
-    embed.set_footer(text = f"{Emojis.fork} {data.forks} • {Emojis.star} {data.stars} | Created")
+    embed.set_footer(text = f"{Emojis.fork_footer} {data.forks} • {Emojis.star} {data.stars} | Created")
 
     view = ui.Delete(inter.author)
 
@@ -63,40 +71,38 @@ async def user(
         embed = embeds.error_embed(f"Error while requesting: {user}", data)
 
         await inter.followup.send(embed=embed)
-        return      
+        return
 
     username = f"{data.full_name} (@{data.username})" if data.full_name != "" else f"{data.username}"
 
     if data.pronouns != "":
         username = f"{username} | {data.pronouns}"
 
-    created = messages.timestamp(data.created)
-
     embed = disnake.Embed(
         title = username,
         description = data.description,
         color = Colours.cerise,
-        timestamp = created
+        timestamp = messages.timestamp(data.created)
     )
 
     embed.url = data.user_url
 
     embed.add_field(
-        name = "Followers",
+        name = f"{Emojis.follow} Followers",
         value = f"[{data.followers}]({data.user_url}?tab=followers)"
     )
 
     embed.add_field(
-        name = "Following",
+        name = f"{Emojis.follow} Following",
         value = f"[{data.following}]({data.user_url}?tab=following)"
     )
 
     embed.add_field(
-        name = "Total Repos",
+        name = f"{Emojis.repo} Total Repos",
         value = f"[{repo_amount}]({data.user_url}?tab=repositories)"
     )
 
-    if data.orgs != []:
+    if data.joined_orgs is not None:
         embed.add_field(
             name = "Organizations",
             value = " | ".join([f"[{org.username}]({org.user_url})" for org in data.joined_orgs])
@@ -104,13 +110,13 @@ async def user(
 
     if data.website != "":
         embed.add_field(
-            name = "Website",
+            name = f"{Emojis.link} Website",
             value = data.website
         )
 
     embed.set_thumbnail(data.avatar)
 
-    embed.set_footer(text = f"Joined")
+    embed.set_footer(text = f"Joined on")
 
     view = ui.Delete(inter.author)
 
