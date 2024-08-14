@@ -17,7 +17,7 @@
 You can invite this bot with this url: https://ananas.moe/r/aninas
 
 ## Self-hosting
-> [!NOTE]
+> [!Warning]
 > **I will not provide any help** with setting this bot up, nor will I respond to issues that appear when self-hosting this bot.
 
 ## Credits
