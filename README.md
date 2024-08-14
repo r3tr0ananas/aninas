@@ -11,7 +11,7 @@
 
 2. Get osaker <img width="18px" src="https://github.com/user-attachments/assets/9cde3a92-ba13-4bb3-b020-d1a9f7d57add"> clips from [sata-andagi.moe](https://sata-andagi.moe)
 
-3. Get images from [agac](https://github.com/THEGOLDENPRO/anime-girls-and-computers)
+3. Get images from [anime-girls-and-computers](https://github.com/THEGOLDENPRO/anime-girls-and-computers)
 
 # Invite
 You can invite this bot with this url: https://ananas.moe/r/aninas
