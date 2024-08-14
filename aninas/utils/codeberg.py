@@ -99,32 +99,36 @@ async def get_file(repo: str, path: int, start_line: int, end_line: int) -> Opti
     return _code_snippet(file_path, content, start_line, end_line)
 
 async def _get_ref(repo: str, path: str) -> Optional[Tuple[str, str]]:
-    type, rest = path.split("/", 1)
+    _, rest = path.split("/", 1)
 
     request = await client.get(f"{CODEBERG}/repos/{repo}/branches")
     data = request.json()
 
     if "message" in data:
         return None
-    
+
     ref, file_path = rest.split("/", 1)
-        
+
     for possible_ref in data:
         if path.startswith(possible_ref["name"] + "/"):
             ref = possible_ref["name"]
             file_path = path[len(ref) + 1 :]
             break
-    
+
     file_path = file_path.split("?")[0]
 
     return ref, file_path
 
 # https://github.com/onerandomusername/monty-python/blob/main/monty/exts/info/codesnippets.py#L232
-def _code_snippet(path: str, data: str, start_line: int, end_line: int) -> Optional[str]:
+def _code_snippet(path: str, data: str, start_line: int, end_line: Optional[int] = None) -> Optional[str]:
     language = path.split("/")[-1].split(".")[-1]
     is_valid_language = language.isalnum()
 
     start_line = int(start_line)
+
+    if end_line is None:
+        end_line = start_line
+
     end_line = int(end_line)
 
     if is_valid_language:
