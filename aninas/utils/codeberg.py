@@ -114,6 +114,8 @@ async def _get_ref(repo: str, path: str) -> Optional[Tuple[str, str]]:
             ref = possible_ref["name"]
             file_path = path[len(ref) + 1 :]
             break
+    
+    file_path = file_path.split("?")[0]
 
     return ref, file_path
 
