@@ -13,5 +13,12 @@
 
 3. Get images from [agac](https://github.com/THEGOLDENPRO/anime-girls-and-computers)
 
+# Invite
+You can invite this bot with this url: https://ananas.moe/r/aninas
+
+## Self-hosting
+> [!NOTE]
+> **I will not provide any help** with setting this bot up, nor will I respond to issues that appear when self-hosting this bot.
+
 ## Credits
 There is some code taken from [Monty](https://github.com/onerandomusername/monty-python)
