@@ -27,9 +27,7 @@ async def get_repo(user: str, repo: str) -> CodebergRepo:
     if "message" in data:
         return data["message"]
 
-    data = CodebergRepo(data)
-
-    return data
+    return CodebergRepo(data)
 
 async def get_user(user: str) -> Tuple[CodebergUser, int] | str:
     request = await client.get(f"{CODEBERG}/users/{user}")
@@ -77,7 +75,7 @@ async def get_comment(user: str, repo: str, number: int, comment: int) -> Option
 
     if "message" in data:
         return None
-    
+
     pi = await get_pi(user, repo, number)
     
     return CodebergIC(data, issue=pi)

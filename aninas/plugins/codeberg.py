@@ -51,7 +51,14 @@ async def repo(
         icon_url = data.icon
     )
 
-    embed.set_footer(text = f"{Emojis.fork_footer} {data.forks} • {Emojis.star} {data.stars} | Created")
+    last_updated = int(messages.timestamp(data.updated_at).timestamp())
+
+    embed.add_field(
+        "Last updated",
+        f"<t:{last_updated}>"
+    )
+
+    embed.set_footer(text = f"{Emojis.fork_footer} {data.forks} • {Emojis.star} {data.stars} • {Emojis.eye} {data.watchers} | Created")
 
     view = ui.Delete(inter.author)
 
@@ -116,7 +123,7 @@ async def user(
 
     embed.set_thumbnail(data.avatar)
 
-    embed.set_footer(text = f"Joined on")
+    embed.set_footer(text = f"Account created")
 
     view = ui.Delete(inter.author)
 

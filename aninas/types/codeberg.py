@@ -41,6 +41,7 @@ class CodebergRepo:
         self.url = self.data.get("html_url")
         self.stars = self.data.get("stars_count")
         self.forks = self.data.get("forks_count")
+        self.watchers = self.data.get("watchers_count")
         self.created_at = self.data.get("created_at")
         self.updated_at = self.data.get("updated_at")
         
