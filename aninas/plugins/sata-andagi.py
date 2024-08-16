@@ -23,6 +23,12 @@ async def random(inter: disnake.CommandInteraction):
 
     data = await sata_andagi.get_random()
 
+    if isinstance(data, str):
+        embed = embeds.error_embed("Error: sata-andagi", data)
+
+        await inter.followup.send(embed=embed)
+        return
+
     await inter.followup.send(data.url)
 
 @osaker.sub_command(description="Search for a random osaker clip")
@@ -34,6 +40,12 @@ async def search(
     await inter.response.defer()
 
     data = await sata_andagi.search(query)
+
+    if isinstance(data, str):
+        embed = embeds.error_embed("Error: sata-andagi", data)
+
+        await inter.followup.send(embed=embed)
+        return
 
     if data is None:
         embed = embeds.error_embed(                 

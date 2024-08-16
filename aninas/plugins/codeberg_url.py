@@ -51,11 +51,17 @@ async def message(message: disnake.Message):
         path = file.group("path")
         start_line = file.group("start_line")
         end_line = file.group("end_line")
+        print(start_line)
+        
+        if start_line is None:
+            return
     
         data = await codeberg.get_file(repo, path, start_line, end_line)
 
+        print(data)
+
         if data is None:
-            return
+            return  
     
         view = ui.Delete(message.author)
         

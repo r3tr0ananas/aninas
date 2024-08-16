@@ -19,6 +19,12 @@ async def random(inter: disnake.CommandInteraction):
 
     metadata = await agac_utils.get_random()
 
+    if isinstance(metadata, str):
+        embed = embeds.error_embed("Error: agac", metadata)
+
+        await inter.followup.send(embed=embed)
+        return
+
     embed = await make_embed(metadata)
 
     await inter.followup.send(embed=embed)
@@ -33,6 +39,12 @@ async def search(
 
     metadata = await agac_utils.search(query)
 
+    if isinstance(metadata, str):
+        embed = embeds.error_embed("Error: agac", metadata)
+
+        await inter.followup.send(embed=embed)
+        return
+
     if metadata is None:
         embed = embeds.error_embed(
             title = "ImageNotFound", 
@@ -41,7 +53,6 @@ async def search(
 
         await inter.followup.send(embed=embed)
         return
-
 
     embed = await make_embed(metadata)
 

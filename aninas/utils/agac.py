@@ -11,18 +11,24 @@ from ..types.agac import AGAC
 
 client = httpx.AsyncClient()
 
-async def get_random() -> AGAC:
-    request = await client.get(f"{AGAC_URL}/random")
-    id = request.headers.get("x-image-id")
+async def get_random() -> AGAC | str:
+    try:
+        request = await client.get(f"{AGAC_URL}/random")
+        id = request.headers.get("x-image-id")
 
-    metadata = await client.get(f"{AGAC_URL}/get/{id}/metadata")
-    metadata = AGAC(metadata.json())
+        metadata = await client.get(f"{AGAC_URL}/get/{id}/metadata")
+        metadata = AGAC(metadata.json())
+    except:
+        return "Something went wrong"
 
     return metadata
 
-async def search(query: str) -> Optional[AGAC]:
-    request = await client.get(f"{AGAC_URL}/search?query={query}")
-    data = request.json()
+async def search(query: str) -> Optional[AGAC] | str:
+    try:
+        request = await client.get(f"{AGAC_URL}/search?query={query}")
+        data = request.json()
+    except:
+        return "Something went wrong"
 
     if data == []:
         return None
@@ -31,12 +37,16 @@ async def search(query: str) -> Optional[AGAC]:
 
     return metadata
 
-async def autocomplete(query: str) -> List[str]:
+async def autocomplete(query: str) -> List[str] | str:
     comps = []
 
-    request = await client.get(f"{AGAC_URL}/search?query={query}")
+    try:
+        request = await client.get(f"{AGAC_URL}/search?query={query}")
+        data = request.json()
+    except:
+        return "Something went wrong"
 
-    for item in request.json():
+    for item in data:
         comps.append(item["name"])
 
     return comps

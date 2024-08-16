@@ -6,6 +6,8 @@ if TYPE_CHECKING:
 
 import httpx
 
+from json import JSONDecodeError
+
 from ..constant import SATA_ANDAGI
 from ..types.sata_andagi import SataAndagi
 
@@ -17,15 +19,21 @@ __all__ = (
     "autocomplete"
 )
 
-async def get_random() -> SataAndagi:
-    request = await client.get(f"{SATA_ANDAGI}/random")
-    data = SataAndagi(request.json())
+async def get_random() -> SataAndagi | str:
+    try:
+        request = await client.get(f"{SATA_ANDAGI}/random")
+        data = request.json()
+    except:
+        return "Something went wrong"
+        
+    return SataAndagi(data)
 
-    return data
-
-async def search(query: str) -> Optional[SataAndagi]:
-    request = await client.get(f"{SATA_ANDAGI}/search?query={query}")
-    data = request.json()
+async def search(query: str) -> Optional[SataAndagi] | str:
+    try:
+        request = await client.get(f"{SATA_ANDAGI}/search?query={query}")
+        data = request.json()
+    except:
+        return "Something went wrong"
 
     if data == []:
         return None
@@ -35,9 +43,13 @@ async def search(query: str) -> Optional[SataAndagi]:
 async def autocomplete(query: str) -> List[str]:
     comps = []
 
-    request = await client.get(f"{SATA_ANDAGI}/search?query={query}")
+    try:
+        request = await client.get(f"{SATA_ANDAGI}/search?query={query}")
+        data = request.json()
+    except JSONDecodeError:
+        return "Something went wrong"
 
-    for item in request.json():
+    for item in data:
         comps.append(item["title"]) 
 
     return comps
