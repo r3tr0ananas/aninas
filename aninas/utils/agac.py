@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typing import Optional, List
+    from .redis import Redis
 
 import httpx
 
@@ -23,7 +24,12 @@ async def get_random() -> AGAC | str:
 
     return metadata
 
-async def search(query: str) -> Optional[AGAC] | str:
+async def search(query: str, redis: Redis) -> Optional[AGAC] | str:
+    cache = await redis.get(query)
+
+    if cache:
+        return AGAC(cache)  
+
     try:
         request = await client.get(f"{AGAC_URL}/search?query={query}")
         data = request.json()
@@ -33,9 +39,9 @@ async def search(query: str) -> Optional[AGAC] | str:
     if data == []:
         return None
 
-    metadata = AGAC(data[0])
+    await redis.set(query, data[0])
 
-    return metadata
+    return AGAC(data[0])
 
 async def autocomplete(query: str) -> List[str] | str:
     comps = []

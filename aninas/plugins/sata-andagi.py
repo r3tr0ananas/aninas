@@ -39,7 +39,7 @@ async def search(
 ):
     await inter.response.defer()
 
-    data = await sata_andagi.search(query)
+    data = await sata_andagi.search(query, plugin.bot.redis)
 
     if isinstance(data, str):
         embed = embeds.error_embed("Error: sata-andagi", data)

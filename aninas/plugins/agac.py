@@ -37,7 +37,7 @@ async def search(
 ):
     await inter.response.defer()
 
-    metadata = await agac_utils.search(query)
+    metadata = await agac_utils.search(query, plugin.bot.redis)
 
     if isinstance(metadata, str):
         embed = embeds.error_embed("Error: agac", metadata)

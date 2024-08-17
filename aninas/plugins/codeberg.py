@@ -20,7 +20,7 @@ async def repo(
 ):
     await inter.response.defer()
 
-    data = await cb.get_repo(user, repo)
+    data = await cb.get_repo(user, repo, plugin.bot.redis)
 
     if isinstance(data, str):
         embed = embeds.error_embed(f"Error while requesting: {user}/{repo}", data)
@@ -72,7 +72,7 @@ async def user(
 ):
     await inter.response.defer()
 
-    data, repo_amount = await cb.get_user(user)
+    data, repo_amount = await cb.get_user(user, plugin.bot.redis)
 
     if isinstance(data, str):
         embed = embeds.error_embed(f"Error while requesting: {user}", data)

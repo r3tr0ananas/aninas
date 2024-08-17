@@ -12,13 +12,6 @@ import re
 
 from disnake.ext import commands
 
-DISCORD_CLIENT_URL_REGEX = re.compile(r"(?P<url><?https?:\/\/[^\s<]+[^<.,:;'\"\]\s]\>?)", re.IGNORECASE)
-DISCORD_CLIENT_URL_WRAPPED_REGEX = re.compile(r"(?<=\<)https?:\/\/[^\s>]+(?=\>)", re.IGNORECASE)
-DISCORD_CLIENT_NAMED_URL_REGEX = re.compile(
-    r"^\[(?P<title>(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*)\]\(\s*(?P<url><?(?:\([^)]*\)|[^\s\\]|\\.)*?>?)(?:\s+['\"]([\s\S]*?)['\"])?\s*\)",
-    re.IGNORECASE,
-)
-
 # https://github.com/onerandomusername/monty-python/blob/main/monty/utils/messages.py#L57
 async def suppress_embeds(
     bot: commands.InteractionBot,

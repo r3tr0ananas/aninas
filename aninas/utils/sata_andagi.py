@@ -3,10 +3,9 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typing import Optional, List
+    from .redis import Redis
 
 import httpx
-
-from json import JSONDecodeError
 
 from ..constant import SATA_ANDAGI
 from ..types.sata_andagi import SataAndagi
@@ -28,7 +27,12 @@ async def get_random() -> SataAndagi | str:
         
     return SataAndagi(data)
 
-async def search(query: str) -> Optional[SataAndagi] | str:
+async def search(query: str, redis: Redis) -> Optional[SataAndagi] | str:
+    cache = await redis.get(query)
+
+    if cache:
+        return SataAndagi(cache)
+
     try:
         request = await client.get(f"{SATA_ANDAGI}/search?query={query}")
         data = request.json()
@@ -37,6 +41,8 @@ async def search(query: str) -> Optional[SataAndagi] | str:
 
     if data == []:
         return None
+    
+    await redis.set(query, data[0])
 
     return SataAndagi(data[0])
 
@@ -46,7 +52,7 @@ async def autocomplete(query: str) -> List[str]:
     try:
         request = await client.get(f"{SATA_ANDAGI}/search?query={query}")
         data = request.json()
-    except JSONDecodeError:
+    except:
         return "Something went wrong"
 
     for item in data:

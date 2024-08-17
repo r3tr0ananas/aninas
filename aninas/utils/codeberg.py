@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typing import Tuple, Optional
+    from .redis import Redis
 
 import httpx
 import base64
@@ -20,16 +21,31 @@ __all__ = (
     "get_file"
 )
 
-async def get_repo(user: str, repo: str) -> CodebergRepo:
+async def get_repo(user: str, repo: str, redis: Redis) -> CodebergRepo:
+    cache = await redis.get(f"{user}/{repo}")
+
+    if cache:
+        return CodebergRepo(cache)
+
     request = await client.get(f"{CODEBERG}/repos/{user}/{repo}")
     data = request.json()
 
     if "message" in data:
         return data["message"]
 
+    await redis.set(f"{user}/{repo}", data, 120)
+
     return CodebergRepo(data)
 
-async def get_user(user: str) -> Tuple[CodebergUser, int] | str:
+async def get_user(user: str, redis: Redis) -> Tuple[CodebergUser, int] | str:
+    cache = await redis.get(f"cb_{user}")
+
+    if cache:
+        orgs = await redis.get(f"cb_{user}_orgs")
+        repos = await redis.get(f"cb_{user}_repos")
+
+        return CodebergUser(data = cache, orgs = orgs), len(repos)
+
     request = await client.get(f"{CODEBERG}/users/{user}")
     data = request.json()
 
@@ -42,6 +58,10 @@ async def get_user(user: str) -> Tuple[CodebergUser, int] | str:
 
     orgs_data = request_orgs.json()
     repos_data = request_repos.json()
+
+    cache = await redis.set(f"cb_{user}", data)
+    orgs = await redis.set(f"cb_{user}_orgs", orgs_data)
+    repos = await redis.set(f"cb_{user}_repos", repos_data)
 
     return CodebergUser(data = data, orgs = orgs_data), len(repos_data)
 
