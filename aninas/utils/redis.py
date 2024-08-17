@@ -4,12 +4,13 @@ if TYPE_CHECKING:
     ...
 
 import redis.asyncio as redis
-
 import json
+
+from ..constant import REDIS
 
 class Redis:
     def __init__(self):
-        pool = redis.ConnectionPool.from_url("redis://localhost:6379")
+        pool = redis.ConnectionPool.from_url(REDIS)
         self.client = redis.Redis.from_pool(pool)
     
     async def get(self, id: str, return_json: bool = True) -> Optional[any]:
