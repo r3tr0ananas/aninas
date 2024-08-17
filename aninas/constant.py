@@ -38,7 +38,6 @@ class Colours:
 
     cerise = 0xDE3163
 
-
 REDIS = config("REDIS", default = "redis://localhost:6379")
 AGAC_URL = config("AGAC_URL", default = "https://api.ananas.moe/agac/v1")
 SATA_ANDAGI = config("SATA_ANDAGI", default = "https://sata-andagi.moe/api")
