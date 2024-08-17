@@ -2,15 +2,12 @@ import asyncio
 import disnake
 from disnake.ext import commands    
 
-from aninas.utils.redis import Redis
-from aninas.constant import BOT_TOKEN
+from .constant import BOT_TOKEN
 
-class MyBot(commands.InteractionBot):
+class Aninas(commands.InteractionBot):
     def __init__(self):
         intents = disnake.Intents.default()
         intents.message_content = True
-
-        self.redis = Redis()
 
         super().__init__(intents=intents)
 
@@ -18,11 +15,8 @@ class MyBot(commands.InteractionBot):
         print(f"logged in as {str(self.user)}")
 
 async def main():
-    client = MyBot()
+    client = Aninas()
     client.load_extensions("aninas/plugins")
-    try:
-        await client.start(BOT_TOKEN)
-    except (KeyboardInterrupt, asyncio.CancelledError):
-        await client.redis.close()
+    await client.start(BOT_TOKEN)
 
 asyncio.run(main())
