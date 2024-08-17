@@ -12,7 +12,7 @@ class MyBot(commands.InteractionBot):
 
         self.redis = Redis()
 
-        super().__init__(intents=intents, test_guilds=[863416692083916820])
+        super().__init__(intents=intents)
 
     async def on_ready(self):
         print(f"logged in as {str(self.user)}")
