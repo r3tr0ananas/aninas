@@ -17,7 +17,7 @@ class Aninas(commands.InteractionBot):
 
         self._redis = Redis()
 
-        super().__init__(intents=intents, test_guilds=[863416692083916820])
+        super().__init__(intents=intents)
 
     @property
     def redis(self) -> Redis:
