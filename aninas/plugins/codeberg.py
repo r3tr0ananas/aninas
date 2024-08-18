@@ -26,7 +26,6 @@ from ..utils.ui import Delete, ShowLess
 from ..utils.messages import suppress_embeds
 
 plugin = plugins.Plugin()
-codeberg: Codeberg
 
 @plugin.load_hook(post=True)
 async def set_codeberg():
@@ -132,11 +131,6 @@ async def repo(
 
     embed.set_footer(text = f"{Emojis.fork_footer} {repo.forks} • {Emojis.star} {repo.stars} • {Emojis.eye} {repo.watchers} / Created")
 
-    view = Delete(inter.author)
-
-    await inter.followup.send(embed=embed, view=view)
-
-@plugin.listener("on_message")
 async def on_message(message: disnake.Message):
     if message.author.bot:
         return

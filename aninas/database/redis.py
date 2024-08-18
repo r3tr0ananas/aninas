@@ -34,7 +34,7 @@ class Redis:
         self,
         id: str,
         data: any,
-        expire: int = 600,
+        expire: int | None = 600,
         _json: bool = True
     ) -> bool:
         if _json:
