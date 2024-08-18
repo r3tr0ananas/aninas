@@ -30,11 +30,11 @@ async def random(inter: disnake.CommandInteraction):
 
     await inter.followup.send(url)
 
-@osaker.sub_command()
+@osaker.sub_command(description="Search for a osaker clip")
 @commands.cooldown(1, 3, commands.BucketType.user)
-async def get(
+async def search(
     inter: disnake.CommandInteraction,
-    query: str = commands.Param(description="Query for a osaka clip")
+    query: str = commands.Param(description="Query")
 ):
     await inter.response.defer()
 
@@ -42,7 +42,7 @@ async def get(
 
     await inter.followup.send(url)
 
-@get.autocomplete("query")
+@search.autocomplete("query")
 async def query_autocomp(inter: disnake.ApplicationCommandInteraction, query: str):
     return await sata_andagi.auto_comp(query)
 
