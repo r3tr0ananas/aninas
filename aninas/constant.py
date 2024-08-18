@@ -40,7 +40,6 @@ class Colours:
     cerise = 0xDE3163
 
 REDIS = config("REDIS", default = "redis://localhost:6379")
-AGAC_URL = config("AGAC_URL", default = "https://api.ananas.moe/agac/v1")
 LIMIT_CHAR = config("LIMIT_CHAR", default = 240)
 CODEBERG_KEY = config("CODEBERG_KEY", cast = str)
 BOT_TOKEN = config("BOT_TOKEN", cast = str)
