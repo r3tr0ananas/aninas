@@ -21,6 +21,7 @@ dependencies = [
     "httpx",
     "python-decouple",
     "psutil",
+    "udatetime",
     "redis"
 ]
 

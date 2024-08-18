@@ -1,18 +1,41 @@
 import asyncio
 import disnake
+import sys
+
 from disnake.ext import commands    
 
-from .constant import BOT_TOKEN
+from .constant import BOT_TOKEN, Colours
+from .utils import embed
+from .database import Redis
 
 class Aninas(commands.InteractionBot):
     def __init__(self):
         intents = disnake.Intents.default()
         intents.message_content = True
 
-        super().__init__(intents=intents)
+        disnake.Embed.set_default_colour(Colours.cerise)
+
+        self._redis = Redis()
+
+        super().__init__(intents=intents, test_guilds=[863416692083916820])
+
+    @property
+    def redis(self) -> Redis:
+        return self._redis
 
     async def on_ready(self):
         print(f"logged in as {str(self.user)}")
+    
+    async def close(self):
+        await super().close()
+
+        await self._redis.close()
+    
+    async def on_slash_command_error(self, inter: disnake.CommandInteraction, error: commands.CommandInvokeError):
+        if inter.response.is_done():
+            return await inter.followup.send(embed=embed.error("Something went wrong", error.original))
+
+        await inter.response.send_message(embed=embed.error("Something went wrong", error.original))
 
 async def main():
     client = Aninas()

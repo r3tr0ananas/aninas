@@ -1,8 +1,8 @@
+import re
+
 from decouple import config
 
 class Emojis:
-    error = "<a:error:1272561118052614307>"
-
     pulls_open = "<:pr_open:1272273151182503966>"
     pulls_merged = "<:pr_merged:1272273030013390888>"
     pulls_draft = "<:pr_draft:1272535045172625439>"
@@ -16,6 +16,7 @@ class Emojis:
 
     link = "<:link:1273332935554236520>"
 
+    error = "<a:error:1272561118052614307>"
     loading_cat = "<a:loading_cat:1273006525845082275>"
 
     eye = "👁️"
@@ -41,6 +42,29 @@ class Colours:
 REDIS = config("REDIS", default = "redis://localhost:6379")
 AGAC_URL = config("AGAC_URL", default = "https://api.ananas.moe/agac/v1")
 SATA_ANDAGI = config("SATA_ANDAGI", default = "https://sata-andagi.moe/api")
-CODEBERG = config("CODEBERG", default = "https://codeberg.org/api/v1")
+LIMIT_CHAR = config("LIMIT_CHAR", default = 240)
 CODEBERG_KEY = config("CODEBERG_KEY", cast = str)
 BOT_TOKEN = config("BOT_TOKEN", cast = str)
+
+CODEBERG_ISSUE_LINK_REGEX = re.compile(
+    r"https?:\/\/codeberg.org\/(?P<repo>[a-zA-Z0-9-]+\/[\w.-]+)\/"
+    r"(?P<type>issues|pulls)\/(?P<number>[0-9]+)[^\s]*"
+)
+
+CODEBERG_RE = re.compile(
+    r"https?:\/\/codeberg.org\/(?P<repo>[a-zA-Z0-9-]+\/[\w.-]+)\/src\/(?P<path>[^#>]+)(\?[^#>]+)?"
+    r"(?:#L(?P<start_line>\d+)(?:-L(?P<end_line>\d+))?)?"
+)
+
+CODEBERG_COMMENT_LINK_REGEX = re.compile(
+    r"https?:\/\/codeberg.org\/(?P<repo>[a-zA-Z0-9-]+\/[\w.-]+)\/"
+    r"(?P<type>issues|pulls)\/(?P<number>[0-9]+)\/?#issuecomment-(?P<comment_id>[0-9]+)[^\s]*"
+)
+
+AUTOMATIC_REGEX = re.compile(
+    r"(?P<repo>[a-zA-Z0-9-]+\/[\w.-]+)#(?P<number>[0-9]+)"
+)
+
+LINK_REGEX = re.compile(
+    r'\bhttps?:\/\/[^\s\]\)<>"]+'
+)
