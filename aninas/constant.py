@@ -13,8 +13,10 @@ class Emojis:
     repo = "<:repo:1273313627415380109>"
     follow = "<:follow:1273331809874214972>"
     fork = "<:fork:1273332307692093470>"
-
     link = "<:link:1273332935554236520>"
+
+    information = ":information_source:"
+    tv = "📺"
 
     error = "<a:error:1272561118052614307>"
     loading_cat = "<a:loading_cat:1273006525845082275>"
@@ -42,6 +44,7 @@ class Colours:
 REDIS = config("REDIS", default = "redis://localhost:6379")
 LIMIT_CHAR = config("LIMIT_CHAR", default = 240)
 CODEBERG_KEY = config("CODEBERG_KEY", cast = str)
+TMDB_KEY = config("TMDB_KEY", cast = str)
 BOT_TOKEN = config("BOT_TOKEN", cast = str)
 
 CODEBERG_ISSUE_LINK_REGEX = re.compile(

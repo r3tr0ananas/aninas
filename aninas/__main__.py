@@ -1,8 +1,9 @@
 import asyncio
 import disnake
 
-from disnake.ext import commands    
-from datetime import datetime
+from disnake.ext import commands
+
+import udatetime
 
 from .constant import BOT_TOKEN, Colours
 from .utils import embed
@@ -18,7 +19,7 @@ class Aninas(commands.InteractionBot):
         disnake.Embed.set_default_colour(Colours.cerise)
 
         self._redis = Redis()
-        self._started = int(datetime.now().timestamp())
+        self._started = int(udatetime.now().timestamp())
 
         super().__init__(intents=intents, activity = disnake.Activity(name = f"v{__version__}", state = "Haiiii :3"))
 
