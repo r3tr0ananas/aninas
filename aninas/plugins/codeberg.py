@@ -131,6 +131,7 @@ async def repo(
 
     embed.set_footer(text = f"{Emojis.fork_footer} {repo.forks} • {Emojis.star} {repo.stars} • {Emojis.eye} {repo.watchers} / Created")
 
+@plugin.listener("on_message")
 async def on_message(message: disnake.Message):
     if message.author.bot:
         return
