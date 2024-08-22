@@ -1,6 +1,6 @@
 steps:
   lint:
-    image: python:3.10-alpine
+    image: python:3.10-slim
     when:
       event: push
     commands:
