@@ -1,8 +1,8 @@
 steps:
-  standardize:
+  lint:
     image: python:3.10-alpine
     when:
-      event: pull_request
+      event: push
       branch: main
     commands:
       - python -m pip install --upgrade pip
