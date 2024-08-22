@@ -67,5 +67,5 @@ AUTOMATIC_REGEX = re.compile(
 )
 
 LINK_REGEX = re.compile(
-    r'\bhttps?:\/\/[^\s\]\)<>"]+'
+    r'\bhttps?:\/\/[^\s\]\)<>"]+|[a-zA-Z0-9-]+\/[\w.-]+#[0-9]+'
 )
