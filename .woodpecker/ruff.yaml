@@ -1,9 +1,9 @@
 steps:
   lint:
-    image: python:3.10-slim
+    image: python:3.10-alpine
     when:
       event: push
     commands:
       - python -m pip install --upgrade pip
-      - python -m pip install .[dev]
+      - pip install ruff
       - ruff check .
