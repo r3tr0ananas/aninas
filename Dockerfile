@@ -1,12 +1,11 @@
-FROM python:3.10-slim-bookworm
+FROM python:3.10-alpine
 
 WORKDIR /app
 
 COPY aninas ./aninas
 COPY pyproject.toml .
-COPY main.py .
 
-RUN apt-get update && apt-get install -y git gcc
+RUN apk update && apk add git gcc musl-dev python3-dev linux-headers
 RUN pip install .
 
-CMD ["python3", "main.py"]
+CMD ["python3", "-m" "aninas"]

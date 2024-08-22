@@ -2,60 +2,55 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from ..database import Redis
     from typing import Optional, List
-    from .redis import Redis
 
 import httpx
 
-from ..constant import SATA_ANDAGI
-from ..types.sata_andagi import SataAndagi
+class SataAndagi:
+    def __init__(self, redis: Redis):
+        self.client = httpx.AsyncClient(
+            headers = {
+                "User-Agent": "Aninas"
+            }
+        )
 
-client = httpx.AsyncClient()
-
-__all__ = (
-    "get_random",
-    "search",
-    "autocomplete"
-)
-
-async def get_random() -> SataAndagi | str:
-    try:
-        request = await client.get(f"{SATA_ANDAGI}/random")
-        data = request.json()
-    except:
-        return "Something went wrong"
-        
-    return SataAndagi(data)
-
-async def search(query: str, redis: Redis) -> Optional[SataAndagi] | str:
-    cache = await redis.get(query)
-
-    if cache:
-        return SataAndagi(cache)
-
-    try:
-        request = await client.get(f"{SATA_ANDAGI}/search?query={query}")
-        data = request.json()
-    except:
-        return "Something went wrong"
-
-    if data == []:
-        return None
+        self.redis = redis
+        self.api_url = "https://sata-andagi.moe/api"
     
-    await redis.set(query, data[0])
+    async def random(self) -> str:
+        request = await self.client.get(f"{self.api_url}/random")
 
-    return SataAndagi(data[0])
+        return request.json()["url"]
+    
+    async def get(self, query: str) -> Optional[str]:
+        cache = await self.redis.get(f"andagi_{query}")
 
-async def autocomplete(query: str) -> List[str]:
-    comps = []
+        if cache:
+            return cache["url"]
+    
+        request = await self.client.get(f"{self.api_url}/search?query={query}")
+        json = request.json()
 
-    try:
-        request = await client.get(f"{SATA_ANDAGI}/search?query={query}")
-        data = request.json()
-    except:
-        return "Something went wrong"
+        if json == []:
+            raise SataAndagiError("No results found")
+        
+        result = json[0]
+        
+        await self.redis.set(f"andagi_{result['title']}", result, 86400)
 
-    for item in data:
-        comps.append(item["title"]) 
+        return result["url"]
 
-    return comps
+    async def auto_comp(self, search: str) -> List[str]:
+        items = []
+
+        request = await self.client.get(f"{self.api_url}/search?query={search}")
+        json = request.json()
+
+        for item in json:
+            items.append(item["title"])
+
+        return items
+
+class SataAndagiError(Exception):
+    pass

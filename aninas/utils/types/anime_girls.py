@@ -5,19 +5,14 @@ if TYPE_CHECKING:
     from typing import List
 
 from dataclasses import dataclass, field
-from ..constant import AGAC_URL
 
-__all__ = (
-    "AGAC",
-)
-    
 @dataclass
 class AuthorsData:
-    name: str = field(repr=False)
-    github: str = field(repr=False)
+    name: str = field(default=False)
+    github: str = field(default=False)
 
 @dataclass
-class AGAC:
+class AnimeGirl:
     data: dict = field(repr=False)  
 
     id: str = field(default=None)
@@ -31,7 +26,7 @@ class AGAC:
     def __post_init__(self):
         self.id = self.data.get("id")
         self.name = self.data.get("name")
-        self.image = f"{AGAC_URL}/get/" + self.data.get("id")
+        self.image = f"https://api.ananas.moe/agac/v1/get/" + self.data.get("id")
         self.authors = [AuthorsData(user["name"], user["github"]) for user in self.data.get("authors", [])]
         self.category = self.data.get("category")
         self.tags = self.data.get("tags", [])

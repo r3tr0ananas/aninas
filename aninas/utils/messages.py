@@ -3,12 +3,9 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typing import Optional
-    from datetime import datetime
 
 import asyncio
 import disnake
-import udatetime
-import re
 
 from disnake.ext import commands
 
@@ -36,6 +33,3 @@ async def suppress_embeds(
     except disnake.Forbidden:
         return False
     return True
-
-def timestamp(timestamp: str) -> datetime:
-    return udatetime.from_string(timestamp)

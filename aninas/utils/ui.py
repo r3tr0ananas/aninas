@@ -1,8 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from typing import Callable
+from typing import Callable
 
 import disnake
 
@@ -50,3 +47,5 @@ class ShowMore(Delete):
             embed = self.make_embed(self.data)
 
             await inter.response.edit_message(embed=embed, view=ShowLess(self.data, self.author, self.make_embed))
+        else:
+            await inter.response.send_message("You are not allowed to press this button", ephemeral=True)
