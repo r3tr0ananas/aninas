@@ -1,0 +1,10 @@
+steps:
+  standardize:
+    image: python:3.10-alpine
+    when:
+      event: pull_request
+      branch: main
+    commands:
+      - python -m pip install --upgrade pip
+      - python -m pip install .[dev]
+      - ruff check .
