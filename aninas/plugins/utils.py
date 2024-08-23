@@ -101,8 +101,8 @@ async def decode(
 ):
     try:
         decoded = base64.b64decode(text).decode()
-    except:
-        raise Exception("Invalid base64 string")
+    except Exception as e:
+        raise Exception(f"Invalid base64 string. Error: {e}")
 
     if decoded.startswith("`"):
         decoded = "\u200b" + decoded
