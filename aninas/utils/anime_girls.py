@@ -21,12 +21,8 @@ class AnimeGirls:
         self.api_url = "https://api.ananas.moe/agac/v1"
 
     async def random(self) -> AnimeGirl:
-        random = await self.client.get(f"{self.api_url}/random")
-
-        x_id = random.headers.get("x-image-id")
-
-        data = await self.client.get(f"{self.api_url}/get/{x_id}/metadata")
-        json = data.json()
+        random = await self.client.get(f"{self.api_url}/random?metadata=true")
+        json = random.json()
 
         return AnimeGirl(json)
     
