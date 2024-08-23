@@ -81,7 +81,7 @@ class DropDownView(disnake.ui.View):
 async def tmdb_command(inter):
     pass
 
-@tmdb_command.sub_command()
+@tmdb_command.sub_command(description="Search something on TMDb")
 async def search(
     inter: disnake.CommandInteraction,
     query: str = commands.Param(description="Query")

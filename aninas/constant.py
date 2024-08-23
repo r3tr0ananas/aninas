@@ -5,7 +5,7 @@ from decouple import config
 class Emojis:
     pulls_open = "<:pr_open:1272273151182503966>"
     pulls_merged = "<:pr_merged:1272273030013390888>"
-    pulls_draft = "<:pr_draft:1272535045172625439>"
+    pulls_draft = "<:pr_draft:1276507629992148992>"
     pulls_closed = "<:pr_closed:1272273006479147152>"
     issues_open = "<:issues_open:1272272998820483144>"
     issues_closed = "<:issues_closed:1272272990754836641>"
@@ -34,7 +34,7 @@ class Colours:
 
     pulls_open = 0x87ab63
     pulls_merged = 0xb259d0
-    pulls_draft = 0x33393e
+    pulls_draft = 0xd2e0f0
     pulls_closed = 0xcc4848
     issues_open = 0x87ab63
     issues_closed = 0xcc4848
