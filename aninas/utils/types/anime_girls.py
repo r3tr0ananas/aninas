@@ -26,7 +26,7 @@ class AnimeGirl:
     def __post_init__(self):
         self.id = self.data.get("id")
         self.name = self.data.get("name")
-        self.image = f"https://api.ananas.moe/agac/v1/get/" + self.data.get("id")
+        self.image = "https://api.ananas.moe/agac/v1/get/" + self.data.get("id")
         self.authors = [AuthorsData(user["name"], user["github"]) for user in self.data.get("authors", [])]
         self.category = self.data.get("category")
         self.tags = self.data.get("tags", [])

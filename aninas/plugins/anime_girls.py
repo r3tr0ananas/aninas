@@ -10,7 +10,6 @@ import disnake
 
 from ..utils.anime_girls import AnimeGirls
 from ..utils.embed import line_fix
-from ..constant import Emojis
 
 plugin = plugins.Plugin()
 

@@ -89,7 +89,7 @@ async def user(
 
     embed.set_thumbnail(user.avatar)
 
-    embed.set_footer(text = f"Account created")
+    embed.set_footer(text = "Account created")
 
     view = Delete(inter.author)
 
@@ -229,7 +229,7 @@ def make_embed(data: Issue | Comment, show_less = False) -> disnake.Embed:
         icon_url = data.owner.avatar
     )
 
-    embed.set_footer(text=f"Commented on")
+    embed.set_footer(text="Commented on")
 
     return embed
 
@@ -314,7 +314,7 @@ def make_issue_embed(data: Issue, show_less = False) -> disnake.Embed:
                 data.image
             )
 
-    embed.set_footer(text=f"Created at")
+    embed.set_footer(text="Created at")
 
     return embed
 
