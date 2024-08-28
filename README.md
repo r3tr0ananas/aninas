@@ -9,15 +9,23 @@
 # Features
 1. Codeberg integration.
 
-> Embedding of PR/Issues/Files
->
-> Embedding of Issue/PR comments
->
-> Repository/User commands
+> <details>
+>  <summary>See example</summary>
+>  
+>  <img src="https://cdn.ananas.moe/aninas.png" width="1000">
+> </details>
 
-2. Get osaker <img width="18px" src="https://github.com/user-attachments/assets/9cde3a92-ba13-4bb3-b020-d1a9f7d57add"> clips from [sata-andagi.moe](https://sata-andagi.moe)
+2. Retrieve Shows, Movies, and People from TMDb
 
-3. Get images from [anime-girls-and-computers](https://github.com/THEGOLDENPRO/anime-girls-and-computers)
+> <details>
+>  <summary>See example</summary>
+>  
+>  <img src="https://cdn.ananas.moe/tmdb_aninas.png" height="800">
+> </details>
+
+3. Get osaker <img width="18px" src="https://github.com/user-attachments/assets/9cde3a92-ba13-4bb3-b020-d1a9f7d57add"> clips from [sata-andagi.moe](https://sata-andagi.moe)
+
+4. Get images from [anime-girls-and-computers](https://github.com/THEGOLDENPRO/anime-girls-and-computers)
 
 # Invite
 You can invite this bot with this url: https://ananas.moe/r/aninas
