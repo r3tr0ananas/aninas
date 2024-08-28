@@ -10,7 +10,7 @@
 1. Codeberg integration.
 
 > <details>
->  <summary>See example</summary>
+>  <summary>Image</summary>
 >  
 >  <img src="https://cdn.ananas.moe/aninas.png" width="1000">
 > </details>
@@ -18,7 +18,7 @@
 2. Retrieve Shows, Movies, and People from TMDb
 
 > <details>
->  <summary>See example</summary>
+>  <summary>Image</summary>
 >  
 >  <img src="https://cdn.ananas.moe/tmdb_aninas.png" height="800">
 > </details>
