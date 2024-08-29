@@ -131,18 +131,17 @@ async def repo(
 
     embed.set_footer(text = f"{Emojis.fork_footer} {repo.forks} • {Emojis.star} {repo.stars} • {Emojis.eye} {repo.watchers} / Created")
 
+    await inter.followup.send(embed=embed)
+
 @plugin.listener("on_message")
 async def on_message(message: disnake.Message):
     if message.author.bot:
         return
  
     embeds = []
-    urls = set(LINK_REGEX.findall(message.content))
+    urls = set(LINK_REGEX.findall(message.content))[:3]
 
     for url in urls:
-        if len(embeds) == 3:
-            break
-
         file = CODEBERG_RE.match(url)
         comment = CODEBERG_COMMENT_LINK_REGEX.match(url)
         regex_match = CODEBERG_ISSUE_LINK_REGEX.match(url) or AUTOMATIC_REGEX.match(url)
