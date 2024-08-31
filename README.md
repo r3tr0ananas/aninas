@@ -20,7 +20,7 @@
 > <details>
 >  <summary>Image</summary>
 >  
->  <img src="https://cdn.ananas.moe/tmdb_aninas.png" height="800">
+>  <img src="https://cdn.ananas.moe/tmdb_aninas.png" height="600">
 > </details>
 
 3. Get osaker <img width="18px" src="https://github.com/user-attachments/assets/9cde3a92-ba13-4bb3-b020-d1a9f7d57add"> clips from [sata-andagi.moe](https://sata-andagi.moe)
