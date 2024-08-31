@@ -139,9 +139,12 @@ async def on_message(message: disnake.Message):
         return
  
     embeds = []
-    urls = set(LINK_REGEX.findall(message.content))[:3]
+    urls = set(LINK_REGEX.findall(message.content))
 
     for url in urls:
+        if len(embeds) == 3:
+            break
+
         file = CODEBERG_RE.match(url)
         comment = CODEBERG_COMMENT_LINK_REGEX.match(url)
         regex_match = CODEBERG_ISSUE_LINK_REGEX.match(url) or AUTOMATIC_REGEX.match(url)
