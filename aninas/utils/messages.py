@@ -1,13 +1,15 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typing import Optional
 
 import asyncio
-import disnake
 
+import disnake
 from disnake.ext import commands
+
 
 # https://github.com/onerandomusername/monty-python/blob/main/monty/utils/messages.py#L57
 async def suppress_embeds(

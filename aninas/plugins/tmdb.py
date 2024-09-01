@@ -1,21 +1,19 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typing import List
 
+import disnake
 from disnake.ext import commands, plugins
 
-import disnake
-
-from ..utils.tmdb import TMDb
-from ..utils.embed import line_fix
 from ..constant import Emojis
-
-from ..utils.types.tmdb.search import Search
-
-from ..utils.types.tmdb.person import Person
+from ..utils.embed import line_fix
+from ..utils.tmdb import TMDb
 from ..utils.types.tmdb.movie import Movie
+from ..utils.types.tmdb.person import Person
+from ..utils.types.tmdb.search import Search
 from ..utils.types.tmdb.tv import TV
 
 plugin = plugins.Plugin()

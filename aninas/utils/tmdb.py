@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -8,12 +9,11 @@ if TYPE_CHECKING:
 import httpx
 
 from ..constant import TMDB_KEY
-
-from .types.tmdb.search import Search
-
-from .types.tmdb.person import Person
 from .types.tmdb.movie import Movie
+from .types.tmdb.person import Person
+from .types.tmdb.search import Search
 from .types.tmdb.tv import TV
+
 
 class TMDb:
     def __init__(self, redis: Redis):

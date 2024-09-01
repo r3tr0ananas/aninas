@@ -1,15 +1,14 @@
 import asyncio
-import disnake
 
+import disnake
+import udatetime
 from disnake.ext import commands
 
-import udatetime
-
-from .constant import BOT_TOKEN, Colours
-from .utils import embed
-from .database import Redis
-
 from . import __version__
+from .constant import BOT_TOKEN, Colours
+from .database import Redis
+from .utils import embed
+
 
 class Aninas(commands.InteractionBot):
     def __init__(self):

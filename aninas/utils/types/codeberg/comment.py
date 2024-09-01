@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 
-from .user import User
 from .issue import Issue
+from .user import User
 
 __all__ = ("Comment",)
 

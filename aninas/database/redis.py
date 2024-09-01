@@ -1,11 +1,13 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typing import Optional
 
-import redis.asyncio as redis
 import json
+
+import redis.asyncio as redis
 
 from ..constant import REDIS
 

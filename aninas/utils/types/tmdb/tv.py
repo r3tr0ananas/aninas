@@ -1,7 +1,6 @@
 import typing
-
-from datetime import datetime
 from dataclasses import dataclass, field
+from datetime import datetime
 
 __all__ = ("TV",)
 

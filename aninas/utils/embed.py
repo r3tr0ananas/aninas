@@ -1,8 +1,9 @@
-from ..constant import Colours, Emojis
+import re
 
 import disnake
 
-import re
+from ..constant import Colours, Emojis
+
 
 def error(
     title: str, 

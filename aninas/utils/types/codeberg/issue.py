@@ -1,9 +1,9 @@
 from __future__ import annotations
+
 import typing
+from dataclasses import dataclass, field
 
 from .user import User
-
-from dataclasses import dataclass, field
 
 __all__ = ("Issue",)
 

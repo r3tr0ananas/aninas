@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -8,6 +9,7 @@ if TYPE_CHECKING:
 import httpx
 
 from .types.anime_girls import AnimeGirl
+
 
 class AnimeGirls:
     def __init__(self, redis: Redis):

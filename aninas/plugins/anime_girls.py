@@ -1,12 +1,12 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ..utils.types.anime_girls import AnimeGirl
 
-from disnake.ext import commands, plugins
-
 import disnake
+from disnake.ext import commands, plugins
 
 from ..utils.anime_girls import AnimeGirls
 from ..utils.embed import line_fix

@@ -1,20 +1,22 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ..database import Redis
     from typing import Optional, Tuple
 
-import httpx
-import textwrap
 import base64
+import textwrap
+
+import httpx
 
 from ..constant import CODEBERG_KEY
-
-from .types.codeberg.repository import Repository
 from .types.codeberg.comment import Comment
 from .types.codeberg.issue import Issue
+from .types.codeberg.repository import Repository
 from .types.codeberg.user import User
+
 
 class Codeberg:
     def __init__(self, redis: Redis):

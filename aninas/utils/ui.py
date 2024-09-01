@@ -1,7 +1,9 @@
 from __future__ import annotations
+
 from typing import Callable
 
 import disnake
+
 
 class Delete(disnake.ui.View):
     def __init__(self, author: disnake.User):

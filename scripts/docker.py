@@ -1,7 +1,9 @@
 import sys
+
 sys.path.insert(0, ".")
 
 import os
+
 from aninas import __version__
 
 build_name = "r3tr0ananas/aninas"

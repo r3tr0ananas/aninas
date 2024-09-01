@@ -1,6 +1,6 @@
 from __future__ import annotations
-import typing
 
+import typing
 from dataclasses import dataclass, field
 
 from .organization import Organization
