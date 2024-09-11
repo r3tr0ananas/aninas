@@ -18,7 +18,7 @@ async def message_uwuify(inter: disnake.ApplicationCommandInteraction, message: 
         embed=embed
     )
 
-@plugin.slash_command(name="uwuify")
+@plugin.slash_command(description="uwuify your text nya~")
 @commands.cooldown(1, 3, commands.BucketType.member)
 async def uwuify(inter: disnake.CommandInteraction, text: str):
     embed = disnake.Embed(
