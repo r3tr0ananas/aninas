@@ -41,8 +41,9 @@ class Colours:
 
     cerise = 0xDE3163
 
-FONT = config("FONT", default = "resources/poppins.ttf")
 THIS_IS_TEMPLATE = config("THIS_IS_TEMPLATE", default = "resources/this_is.jpg")
+THIS_IS_FONT = config("FONT", default = "resources/poppins.ttf")
+QUOTE_FONT = config("THIS_IS_TEMPLATE", default = "resources/ubuntu.ttf")
 REDIS = config("REDIS", default = "redis://localhost:6379")
 LIMIT_CHAR = config("LIMIT_CHAR", default = 240)
 CODEBERG_KEY = config("CODEBERG_KEY", cast = str)

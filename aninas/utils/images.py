@@ -4,7 +4,7 @@ from typing import Generator
 
 from PIL import Image, ImageDraw, ImageFont
 
-from ..constant import FONT
+from ..constant import QUOTE_FONT, THIS_IS_FONT, THIS_IS_TEMPLATE
 
 BG_COLOR = (32, 32, 32, 255)
 TARGET_HEIGHT = 128
@@ -54,7 +54,7 @@ def make_it_quote(profile_picture: Image.Image, text: str, author: str) -> Image
     quote_image = Image.alpha_composite(quote_image, gradient)
     draw = ImageDraw.Draw(quote_image)
 
-    font = ImageFont.truetype(FONT, 32)
+    font = ImageFont.truetype(QUOTE_FONT, 32)
 
     _, _, _, height = draw.textbbox((profile_picture.width, 0), text, font=font)
     x = profile_picture.width + 40
@@ -65,7 +65,7 @@ def make_it_quote(profile_picture: Image.Image, text: str, author: str) -> Image
         font=font,
         fill=TEXT_COLOR,
     )
-    font = ImageFont.truetype(FONT, 16)
+    font = ImageFont.truetype(QUOTE_FONT, 16)
     draw.text(  # type: ignore
         (x, center_y + height + 10),
         f"- {author}",
@@ -74,3 +74,26 @@ def make_it_quote(profile_picture: Image.Image, text: str, author: str) -> Image
     )
 
     return quote_image
+
+def make_this_is(who: str, image: Image.Image) -> Image.Image:
+    font = ImageFont.truetype(THIS_IS_FONT, size=128)
+
+    image = image.resize(
+        (1280, 780)
+    )
+
+    template = Image.open(THIS_IS_TEMPLATE)
+
+    template.paste(image, (0, 500))
+    
+    draw = ImageDraw.Draw(template)
+    _, _, width, _ = draw.textbbox((0, 0), who, font=font)
+
+    draw.text(
+        ((template.width - width) / 2, 250),
+        who,
+        font=font,
+        fill=(0, 0, 0, 0)
+    )
+
+    return template

@@ -6,8 +6,7 @@ import httpx
 from disnake.ext import plugins, commands
 from PIL import Image
 
-from ..utils.quote import make_it_quote
-from ..utils.this_is import make_this_is
+from ..utils.images import make_it_quote, make_this_is
 
 plugin = plugins.Plugin()
 
