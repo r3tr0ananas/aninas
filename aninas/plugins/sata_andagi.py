@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 import disnake
 import disnake_plugins
-from disnake.ext import commands, plugins
+from disnake.ext import commands
 
 from ..utils.sata_andagi import SataAndagi
 
