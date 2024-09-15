@@ -6,11 +6,12 @@ if TYPE_CHECKING:
     ...
 
 import disnake
+import disnake_plugins
 from disnake.ext import commands, plugins
 
 from ..utils.sata_andagi import SataAndagi
 
-plugin = plugins.Plugin()
+plugin = disnake_plugins.Plugin()
 
 @plugin.load_hook(post=True)
 async def set_sata_andagi():

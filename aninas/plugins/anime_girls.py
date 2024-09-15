@@ -6,12 +6,14 @@ if TYPE_CHECKING:
     from ..utils.types.anime_girls import AnimeGirl
 
 import disnake
-from disnake.ext import commands, plugins
+import disnake_plugins
+
+from disnake.ext import commands
 
 from ..utils.anime_girls import AnimeGirls
 from ..utils.embed import line_fix
 
-plugin = plugins.Plugin()
+plugin = disnake_plugins.Plugin()
 
 @plugin.load_hook()
 async def load_anime_girls():

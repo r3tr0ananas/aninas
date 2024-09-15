@@ -1,14 +1,15 @@
 import io
 
 import disnake
+import disnake_plugins
 import httpx
 
-from disnake.ext import plugins, commands
+from disnake.ext import commands
 from PIL import Image
 
 from ..utils.images import make_it_quote, make_this_is
 
-plugin = plugins.Plugin()
+plugin = disnake_plugins.Plugin()
 
 @plugin.message_command(name="Quote this message")
 @commands.cooldown(1, 3, commands.BucketType.member)

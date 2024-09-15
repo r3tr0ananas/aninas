@@ -1,10 +1,12 @@
 import disnake
 
-from disnake.ext import plugins, commands
+from disnake.ext import commands
+
+import disnake_plugins
 
 from ..utils import uwu
 
-plugin = plugins.Plugin()
+plugin = disnake_plugins.Plugin()
 
 @plugin.message_command(name="uwuify this text")
 @commands.cooldown(1, 3, commands.BucketType.member)

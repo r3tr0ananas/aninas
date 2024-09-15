@@ -6,7 +6,8 @@ if TYPE_CHECKING:
     from typing import List
 
 import disnake
-from disnake.ext import commands, plugins
+import disnake_plugins
+from disnake.ext import commands
 
 from ..constant import Emojis
 from ..utils.embed import line_fix
@@ -16,7 +17,7 @@ from ..utils.types.tmdb.person import Person
 from ..utils.types.tmdb.search import Search
 from ..utils.types.tmdb.tv import TV
 
-plugin = plugins.Plugin()
+plugin = disnake_plugins.Plugin()
 
 @plugin.load_hook()
 async def load_tmdb():

@@ -7,17 +7,18 @@ if TYPE_CHECKING:
 
 import base64
 import random
+import disnake_plugins
 from platform import python_version
 
 import disnake
 from disnake import __version__ as disnake_version
-from disnake.ext import commands, plugins
+from disnake.ext import commands
 
 from .. import __version__ as bot_version
 from ..constant import Emojis
 from ..utils.embed import line_fix
 
-plugin = plugins.Plugin()
+plugin = disnake_plugins.Plugin()
 HTTP_STATUS_CODES = [
     100, 101, 102, 103,
     200, 201, 202, 203, 204, 205, 206, 207, 208, 214, 226,

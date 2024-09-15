@@ -7,7 +7,9 @@ if TYPE_CHECKING:
 
 import disnake
 import udatetime
-from disnake.ext import commands, plugins
+import disnake_plugins
+
+from disnake.ext import commands
 
 from ..constant import (AUTOMATIC_REGEX, CODEBERG_COMMENT_LINK_REGEX,
                         CODEBERG_ISSUE_LINK_REGEX, CODEBERG_RE, LIMIT_CHAR,
@@ -17,7 +19,7 @@ from ..utils.messages import suppress_embeds
 from ..utils.types.codeberg import Comment, Issue
 from ..utils.ui import Delete, ShowLess
 
-plugin = plugins.Plugin()
+plugin = disnake_plugins.Plugin()
 
 @plugin.load_hook(post=True)
 async def set_codeberg():
