@@ -58,8 +58,7 @@ WORD_REPLACEMENTS = {
     "love": "luv",
     "stupid": "baka",
     "what": "nani",
-    "meow": "nya~",
-    "hi": "haiii"
+    "meow": "nya~"
 }
 
 def uwuify(text: str) -> str:
