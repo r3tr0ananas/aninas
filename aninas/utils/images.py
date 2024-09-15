@@ -12,7 +12,7 @@ TARGET_WIDTH = 600
 START_X = 40
 TEXT_COLOR = (255, 255, 255, 255)
 
-# Thanks to [Tea](https://github.com/teaishealthy)
+# Thanks to [Tea](https://github.com/teaishealthy) for making the make_it_quote function :3
 
 def interpolate(
     start_color: Iterable[int], end_color: Iterable[int], interval: int
