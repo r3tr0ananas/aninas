@@ -20,12 +20,25 @@
 > <details>
 >  <summary>Image</summary>
 >  
->  <img src="https://cdn.ananas.moe/tmdb_aninas.png" width="600">
+>  <img src="https://cdn.ananas.moe/aninas_tmdb.png" width="600">
 > </details>
 
-3. Get osaker <img width="18px" src="https://github.com/user-attachments/assets/9cde3a92-ba13-4bb3-b020-d1a9f7d57add"> clips from [sata-andagi.moe](https://sata-andagi.moe)
+3. "This is" Generator
+
+> <details>
+>  <summary>Image</summary>
+>  
+>  <img src="https://cdn.ananas.moe/aninas_this_is.png" width="400">
+> </details>
+
 
 4. Get images from [anime-girls-and-computers](https://github.com/THEGOLDENPRO/anime-girls-and-computers)
+
+> <details>
+>  <summary>Image</summary>
+>  
+>  <img src="https://cdn.ananas.moe/aninas_agac.png" width="600">
+> </details>
 
 # Invite
 You can invite this bot with this url: https://ananas.moe/r/aninas
@@ -35,4 +48,4 @@ You can invite this bot with this url: https://ananas.moe/r/aninas
 > **I will not provide any help** with setting this bot up, nor will I respond to issues that appear when self-hosting this bot.
 
 ## Credits
-There is some code taken from [Monty](https://github.com/onerandomusername/monty-python)
+There is some code taken from [Monty](https://github.com/onerandomusername/monty-python) for the Codeberg stuff.
