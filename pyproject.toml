@@ -23,7 +23,8 @@ dependencies = [
     "psutil",
     "udatetime",
     "redis",
-    "pillow"
+    "pillow",
+    "anmoku@git+https://github.com/THEGOLDENPRO/anmoku"
 ]
 
 dynamic = ["version"]

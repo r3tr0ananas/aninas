@@ -154,18 +154,18 @@ def media_embed(metadata: Movie | TV) -> disnake.Embed:
     )
 
     if isinstance(metadata, TV):
-        first_air_date = "TBA"
-        last_air_date = "Didn't start yet"
-        next_air_date = "No idea"
-
-        if metadata.first_date:
-            first_air_date = f"<t:{int(metadata.first_date.timestamp())}:d>"
-            last_air_date = f"<t:{int(metadata.last_date.timestamp())}:d>"
-            next_air_date = "Not set/Show ended"
-        
-            if metadata.next_date is not None:
-                next_air_date = f"<t:{int(metadata.next_date.timestamp())}:d>"
-
+        first_air_date = (
+            f"<t:{int(metadata.first_date.timestamp())}:d>" 
+            if metadata.first_date else "TBA"
+        )
+        last_air_date = (
+            f"<t:{int(metadata.last_date.timestamp())}:d>" 
+            if metadata.first_date else "Didn't start yet"
+        )
+        next_air_date = (
+            f"<t:{int(metadata.next_date.timestamp())}:d>" 
+            if metadata.next_date else ("Not set/Show ended" if metadata.first_date else "No idea")
+        )
 
         embed.add_field(f"{Emojis.tv} Show Info", 
         line_fix(
