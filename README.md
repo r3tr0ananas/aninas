@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/6548bc2a-0b46-45b4-92ed-aaba555aacdb" width="100">
+  <img src="https://cdn.ananas.moe/aninas-pfp.png" width="100">
   
   # aninas
   <sub>Goofy ahhh bot</sub>
