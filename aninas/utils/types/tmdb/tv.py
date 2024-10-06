@@ -43,7 +43,7 @@ class TV:
             last_date = self.data.get("last_air_date")
             self.last_date = datetime.strptime(last_date, "%Y-%m-%d")
 
-            next_date = self.data.get("next_episode_to_air")
+            next_date = self.data.get("next_episode_to_air", {}).get("air_date")
 
             if next_date is not None:
                 self.next_date = datetime.strptime(next_date, "%Y-%m-%d")
