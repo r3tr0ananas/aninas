@@ -31,8 +31,15 @@
 >  <img src="https://cdn.ananas.moe/aninas_this_is.png" width="400">
 > </details>
 
+4. Quote a message
 
-4. Get images from [anime-girls-and-computers](https://github.com/THEGOLDENPRO/anime-girls-and-computers)
+> <details>
+>  <summary>Image</summary>
+>  
+>  <img src="https://cdn.ananas.moe/aninas_quote.png" width="600">
+> </details>
+
+5. Get images from [anime-girls-and-computers](https://github.com/THEGOLDENPRO/anime-girls-and-computers)
 
 > <details>
 >  <summary>Image</summary>
