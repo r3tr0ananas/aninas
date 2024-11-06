@@ -28,9 +28,9 @@ async def update_c():
 @commands.cooldown(1, 3, commands.BucketType.member)
 async def convert(
     inter: disnake.CommandInteraction,
-    amount: int,
-    source: str,
-    target: str = "USD",
+    amount: int = commands.Param(description="The quantity of the source currency."),
+    source: str = commands.Param(description="The currency you're converting from."),
+    target: str = commands.Param("USD", description="The currency you're converting to. Defaults to USD."),
     date: str = commands.Param(None, description="Optional date to fetch historical exchange rates. E.G: 2014-2-24")
 ):
     if date is not None:
