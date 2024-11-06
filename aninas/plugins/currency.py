@@ -34,7 +34,7 @@ async def convert(
     date: str = commands.Param(None, description="Optional date to fetch historical exchange rates. E.G: 2014-2-24")
 ):
     if date is not None:
-        date = datetime.strptime(date, "%Y-%m-%d").date()
+        date = datetime.strptime(date, "%Y-%m-%d")
 
     converted = c.convert(amount, source, target, date)
 
@@ -46,7 +46,7 @@ async def convert(
             To be exact: {converted} {target}
         """),
         colour=disnake.Colour.green(),
-        timestamp=datetime.now()
+        timestamp=date if date else datetime.now()
     )
 
     await inter.send(embed=embed)
