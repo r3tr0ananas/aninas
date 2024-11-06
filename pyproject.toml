@@ -24,7 +24,8 @@ dependencies = [
     "udatetime",
     "redis",
     "pillow",
-    "anmoku@git+https://github.com/THEGOLDENPRO/anmoku"
+    "anmoku@git+https://github.com/THEGOLDENPRO/anmoku",
+    "currencyconverter"
 ]
 
 dynamic = ["version"]
