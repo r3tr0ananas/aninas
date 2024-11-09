@@ -36,7 +36,7 @@ async def convert(
     if date is not None:
         date = datetime.strptime(date, "%Y-%m-%d")
 
-    converted = c.convert(amount, source, target, date)
+    converted = c.convert(amount, source.upper(), target.upper(), date)
 
     embed = disnake.Embed(
         title = f"{source} to {target}",
