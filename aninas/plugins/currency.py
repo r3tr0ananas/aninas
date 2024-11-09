@@ -52,15 +52,15 @@ async def convert(
     await inter.send(embed=embed)
 
 @convert.autocomplete("source")
-async def source_autocomp(_, query):
+async def source_autocomp(_, query: str):
     currencies = c.currencies
 
-    return [currency for currency in currencies if query in currency][:10]
+    return [currency for currency in currencies if query.upper() in currency][:10]
 
 @convert.autocomplete("target")
-async def target_autocomp(_, query):
+async def target_autocomp(_, query: str):
     currencies = c.currencies
 
-    return [currency for currency in currencies if query in currency][:10]
+    return [currency for currency in currencies if query.upper() in currency][:10]
 
 setup, teardown = plugin.create_extension_handlers()
