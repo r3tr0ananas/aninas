@@ -41,9 +41,7 @@ async def convert(
     embed = disnake.Embed(
         title = f"{source} to {target}",
         description = line_fix(f"""
-            {amount} {source} are {round(converted)} {target} (rounded)
-
-            To be exact: {converted} {target}
+            {amount} {source} are {round(converted, 2)} {target}
         """),
         colour=disnake.Colour.green(),
         timestamp=date if date else datetime.now()
