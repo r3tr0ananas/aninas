@@ -7,6 +7,7 @@ from .user import User
 
 __all__ = ("Issue",)
 
+
 @dataclass
 class Issue:
     data: dict = field(repr=False)
@@ -53,14 +54,14 @@ class Issue:
 
         if assginees is not None:
             self.assginees = [User(user) for user in assginees]
-        
+
         if assets is not None:
             for asset in assets:
                 file_ext = asset["name"].split(".")[-1]
 
                 if file_ext in ["png", "jpeg", "jpg"]:
                     self.image = asset["browser_download_url"]
-                    
+
                     break
 
         self.full_name = self.data.get("repository").get("full_name")
@@ -71,7 +72,9 @@ class Issue:
             self.requsted_reviewers = pr_data.get("requested_reviewers", [])
 
             if self.requsted_reviewers is not None:
-                self.requsted_reviewers = [User(user) for user in self.requsted_reviewers]
+                self.requsted_reviewers = [
+                    User(user) for user in self.requsted_reviewers
+                ]
 
             self.merged = pr_data.get("merged")
             self.draft = pr_data.get("draft")

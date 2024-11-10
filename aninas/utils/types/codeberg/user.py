@@ -7,6 +7,7 @@ from .organization import Organization
 
 __all__ = ("User",)
 
+
 @dataclass
 class User:
     data: dict = field(repr=False)

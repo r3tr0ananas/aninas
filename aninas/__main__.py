@@ -20,7 +20,10 @@ class Aninas(commands.InteractionBot):
         self._redis = Redis()
         self._started = int(udatetime.now().timestamp())
 
-        super().__init__(intents=intents, activity = disnake.Activity(name = f"v{__version__}", state = "Haiiii :3"))
+        super().__init__(
+            intents=intents,
+            activity=disnake.Activity(name=f"v{__version__}", state="Haiiii :3"),
+        )
 
     @property
     def redis(self) -> Redis:
@@ -32,21 +35,29 @@ class Aninas(commands.InteractionBot):
 
     async def on_ready(self):
         print(f"Ready: {str(self.user)}")
-    
+
     async def close(self):
         await super().close()
 
         await self._redis.close()
 
-    async def on_slash_command_error(self, inter: disnake.CommandInteraction, error: commands.CommandInvokeError):
+    async def on_slash_command_error(
+        self, inter: disnake.CommandInteraction, error: commands.CommandInvokeError
+    ):
         if inter.response.is_done():
-            return await inter.followup.send(embed=embed.error("Something went wrong", error.original))
+            return await inter.followup.send(
+                embed=embed.error("Something went wrong", error.original)
+            )
 
-        await inter.response.send_message(embed=embed.error("Something went wrong", error.original))
+        await inter.response.send_message(
+            embed=embed.error("Something went wrong", error.original)
+        )
+
 
 async def main():
     client = Aninas()
     client.load_extensions("aninas/plugins")
     await client.start(BOT_TOKEN)
+
 
 asyncio.run(main())

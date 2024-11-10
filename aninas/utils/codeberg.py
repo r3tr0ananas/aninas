@@ -21,15 +21,12 @@ from .types.codeberg.user import User
 class Codeberg:
     def __init__(self, redis: Redis):
         self.client = httpx.AsyncClient(
-            headers = {
-                "Authorization": f"token {CODEBERG_KEY}", 
-                "User-Agent": "Aninas"
-            }
+            headers={"Authorization": f"token {CODEBERG_KEY}", "User-Agent": "Aninas"}
         )
 
         self.redis = redis
         self.api_url = "https://codeberg.org/api/v1"
-    
+
     async def get_repository(self, user: str, repo: str) -> Optional[Repository]:
         user_repo = f"{user}/{repo}"
 
@@ -37,7 +34,7 @@ class Codeberg:
 
         if cache:
             return Repository(cache)
-        
+
         repos = await self.client.get(f"{self.api_url}/repos/{user_repo}")
         json = repos.json()
 
@@ -69,21 +66,27 @@ class Codeberg:
         await self.redis.set(f"cb_{user}", json, 3600)
 
         return User(json)
-    
-    async def get_comment(self, user_repo: str, number: int, comment_id: int) -> Optional[Comment]:
+
+    async def get_comment(
+        self, user_repo: str, number: int, comment_id: int
+    ) -> Optional[Comment]:
         cache = await self.redis.get(f"cb_{comment_id}")
 
         if cache:
             return Comment(cache)
-    
-        comment = await self.client.get(f"{self.api_url}/repos/{user_repo}/issues/comments/{comment_id}")
-        
+
+        comment = await self.client.get(
+            f"{self.api_url}/repos/{user_repo}/issues/comments/{comment_id}"
+        )
+
         json = comment.json()
 
         if comment.status_code == 204 or "message" in json:
             return None
-        
-        issue = await self.client.get(f"{self.api_url}/repos/{user_repo}/issues/{number}")
+
+        issue = await self.client.get(
+            f"{self.api_url}/repos/{user_repo}/issues/{number}"
+        )
 
         json["issue"] = issue.json()
         json["id"] = number
@@ -91,14 +94,16 @@ class Codeberg:
         await self.redis.set(f"cb_{comment_id}", json)
 
         return Comment(json)
-    
+
     async def get_issue(self, user_repo: str, issue_id: int) -> Optional[Issue]:
         cache = await self.redis.get(f"cb_{user_repo}_{issue_id}")
 
         if cache:
             return Issue(cache)
-    
-        comment = await self.client.get(f"{self.api_url}/repos/{user_repo}/issues/{issue_id}")
+
+        comment = await self.client.get(
+            f"{self.api_url}/repos/{user_repo}/issues/{issue_id}"
+        )
         pr = await self.client.get(f"{self.api_url}/repos/{user_repo}/pulls/{issue_id}")
 
         json = comment.json()
@@ -106,34 +111,38 @@ class Codeberg:
 
         if "message" in json:
             return None
-        
+
         if "message" in pr_json:
             pr_json = None
-        
+
         json["pr"] = pr_json
 
         await self.redis.set(f"cb_{user_repo}_{issue_id}", json)
 
         return Issue(json)
-    
-    async def get_code(self, repo: str, path: str, start_line: int, end_line: Optional[int]) -> Optional[str]:
+
+    async def get_code(
+        self, repo: str, path: str, start_line: int, end_line: Optional[int]
+    ) -> Optional[str]:
         ref, file_path = await self.__get_ref(repo, path)
 
         if ref is None:
             return None
 
-        request = await self.client.get(f"{self.api_url}/repos/{repo}/contents/{file_path}?ref={ref}")
+        request = await self.client.get(
+            f"{self.api_url}/repos/{repo}/contents/{file_path}?ref={ref}"
+        )
         data = request.json()
 
         if "message" in data:
             return None
-        
+
         content = base64.b64decode(data["content"]).decode()
 
         return self.__code_snippet(file_path, content, start_line, end_line)
-        
+
     async def __get_ref(self, repo: str, path: str) -> Optional[Tuple[str, str]]:
-        _, rest = path.split("/", 1)    
+        _, rest = path.split("/", 1)
 
         request = await self.client.get(f"{self.api_url}/repos/{repo}/branches")
         data = request.json()
@@ -154,7 +163,9 @@ class Codeberg:
         return ref, file_path
 
     # https://github.com/onerandomusername/monty-python/blob/main/monty/exts/info/codesnippets.py#L232
-    def __code_snippet(self, path: str, data: str, start_line: int, end_line: Optional[int]) -> Optional[str]:
+    def __code_snippet(
+        self, path: str, data: str, start_line: int, end_line: Optional[int]
+    ) -> Optional[str]:
         language = path.split("/")[-1].split(".")[-1]
         is_valid_language = language.isalnum()
 
@@ -174,7 +185,7 @@ class Codeberg:
 
         if start_line > len(split_lines) or end_line < 1:
             return None
-        
+
         start_line = max(1, start_line)
         end_line = min(len(split_lines), end_line)
 
@@ -195,6 +206,7 @@ class Codeberg:
             return f"{ret}```{language}\n{required}\n```"
 
         return f"{ret}```\n```"
+
 
 class CodebergError(Exception):
     pass

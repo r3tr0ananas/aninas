@@ -4,6 +4,7 @@ from datetime import datetime
 
 __all__ = ("TV",)
 
+
 @dataclass
 class TV:
     data: dict = field(repr=False)
@@ -29,12 +30,12 @@ class TV:
         self.original_name = self.data.get("original_name")
         self.overview = self.data.get("overview")
         poster = self.data.get("poster_path")
-        
+
         if poster is not None:
             self.image = "https://image.tmdb.org/t/p/w440_and_h660_face" + poster
 
         self.genres = [f"`{genre['name']}`" for genre in self.data.get("genres")]
-        
+
         first_date = self.data.get("first_air_date")
 
         if first_date:
@@ -46,7 +47,9 @@ class TV:
             next_date = self.data.get("next_episode_to_air", {})
 
             if next_date is not None:
-                self.next_date = datetime.strptime(next_date.get("air_date"), "%Y-%m-%d")
+                self.next_date = datetime.strptime(
+                    next_date.get("air_date"), "%Y-%m-%d"
+                )
 
         self.seasons = self.data.get("number_of_seasons")
         self.episodes = self.data.get("number_of_episodes")

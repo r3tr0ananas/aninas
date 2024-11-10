@@ -4,6 +4,7 @@ from datetime import datetime
 
 __all__ = ("Movie",)
 
+
 @dataclass
 class Movie:
     data: dict = field(repr=False)
@@ -28,12 +29,12 @@ class Movie:
         self.image = "https://cdn.ananas.moe/not-found.png"
 
         poster = self.data.get("poster_path")
-        
+
         if poster is not None:
             self.image = "https://image.tmdb.org/t/p/w440_and_h660_face" + poster
 
         self.genres = [f"`{genre['name']}`" for genre in self.data.get("genres")]
-        
+
         date = self.data.get("release_date")
 
         if date:

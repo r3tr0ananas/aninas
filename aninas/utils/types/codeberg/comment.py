@@ -5,6 +5,7 @@ from .user import User
 
 __all__ = ("Comment",)
 
+
 @dataclass
 class Comment:
     data: dict = field(repr=False)

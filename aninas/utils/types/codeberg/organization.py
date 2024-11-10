@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 
 __all__ = ("Organization",)
 
+
 @dataclass
 class Organization:
     data: dict = field(repr=False)

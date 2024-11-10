@@ -2,12 +2,8 @@ from dataclasses import dataclass, field
 
 __all__ = ("Person",)
 
-GENDER = {
-    0: "Not specified",
-    1: "Female",
-    2: "Male",
-    3: "Non-binary"
-}
+GENDER = {0: "Not specified", 1: "Female", 2: "Male", 3: "Non-binary"}
+
 
 @dataclass
 class Person:
@@ -28,4 +24,6 @@ class Person:
         self.name = self.data.get("name")
         self.original_name = self.data.get("original_name")
         self.gender = GENDER[self.data.get("gender")]
-        self.image = "https://image.tmdb.org/t/p/w440_and_h660_face" + self.data.get("profile_path")
+        self.image = "https://image.tmdb.org/t/p/w440_and_h660_face" + self.data.get(
+            "profile_path"
+        )

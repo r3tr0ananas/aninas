@@ -6,9 +6,10 @@ from .user import User
 
 __all__ = ("Repository",)
 
+
 @dataclass
 class Repository:
-    data: dict = field(repr=False)  
+    data: dict = field(repr=False)
 
     owner: User = field(default=None)
 
@@ -26,9 +27,7 @@ class Repository:
     icon: str = field(default=None)
 
     def __post_init__(self):
-        self.owner = User(
-            self.data.get("owner")
-        )
+        self.owner = User(self.data.get("owner"))
 
         self.name = self.data.get("name")
         self.description = self.data.get("description", "")

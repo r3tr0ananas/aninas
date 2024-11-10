@@ -2,6 +2,7 @@ import re
 
 from decouple import config
 
+
 class Emojis:
     pulls_open = "<:pr_open:1272273151182503966>"
     pulls_merged = "<:pr_merged:1272273030013390888>"
@@ -29,26 +30,28 @@ class Emojis:
     zap = "⚡"
     package = "📦"
 
+
 class Colours:
     error = 0xFF0000
 
-    pulls_open = 0x87ab63
-    pulls_merged = 0xb259d0
-    pulls_draft = 0xd2e0f0
-    pulls_closed = 0xcc4848
-    issues_open = 0x87ab63
-    issues_closed = 0xcc4848
+    pulls_open = 0x87AB63
+    pulls_merged = 0xB259D0
+    pulls_draft = 0xD2E0F0
+    pulls_closed = 0xCC4848
+    issues_open = 0x87AB63
+    issues_closed = 0xCC4848
 
     cerise = 0xDE3163
 
-THIS_IS_TEMPLATE = config("THIS_IS_TEMPLATE", default = "aninas/assets/this_is.jpg")
-THIS_IS_FONT = config("FONT", default = "aninas/assets/poppins.ttf")
-QUOTE_FONT = config("THIS_IS_TEMPLATE", default = "aninas/assets/ubuntu.ttf")
-REDIS = config("REDIS", default = "redis://localhost:6379")
-LIMIT_CHAR = config("LIMIT_CHAR", default = 240)
-CODEBERG_KEY = config("CODEBERG_KEY", cast = str)
-TMDB_KEY = config("TMDB_KEY", cast = str)
-BOT_TOKEN = config("BOT_TOKEN", cast = str)
+
+THIS_IS_TEMPLATE = config("THIS_IS_TEMPLATE", default="aninas/assets/this_is.jpg")
+THIS_IS_FONT = config("FONT", default="aninas/assets/poppins.ttf")
+QUOTE_FONT = config("THIS_IS_TEMPLATE", default="aninas/assets/ubuntu.ttf")
+REDIS = config("REDIS", default="redis://localhost:6379")
+LIMIT_CHAR = config("LIMIT_CHAR", default=240)
+CODEBERG_KEY = config("CODEBERG_KEY", cast=str)
+TMDB_KEY = config("TMDB_KEY", cast=str)
+BOT_TOKEN = config("BOT_TOKEN", cast=str)
 
 CODEBERG_ISSUE_LINK_REGEX = re.compile(
     r"https?:\/\/codeberg.org\/(?P<repo>[a-zA-Z0-9-]+\/[\w.-]+)\/"
@@ -65,10 +68,6 @@ CODEBERG_COMMENT_LINK_REGEX = re.compile(
     r"(?P<type>issues|pulls)\/(?P<number>[0-9]+)\/?#issuecomment-(?P<comment_id>[0-9]+)[^\s]*"
 )
 
-AUTOMATIC_REGEX = re.compile(
-    r"(?P<repo>[a-zA-Z0-9-]+\/[\w.-]+)#(?P<number>[0-9]+)"
-)
+AUTOMATIC_REGEX = re.compile(r"(?P<repo>[a-zA-Z0-9-]+\/[\w.-]+)#(?P<number>[0-9]+)")
 
-LINK_REGEX = re.compile(
-    r'\bhttps?:\/\/[^\s\]\)<>"]+|[a-zA-Z0-9-]+\/[\w.-]+#[0-9]+'
-)
+LINK_REGEX = re.compile(r'\bhttps?:\/\/[^\s\]\)<>"]+|[a-zA-Z0-9-]+\/[\w.-]+#[0-9]+')

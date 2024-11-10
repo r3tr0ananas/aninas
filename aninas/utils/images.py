@@ -14,6 +14,7 @@ TEXT_COLOR = (255, 255, 255, 255)
 
 # Thanks to [Tea](https://github.com/teaishealthy) for making the make_it_quote function :3
 
+
 def interpolate(
     start_color: Iterable[int], end_color: Iterable[int], interval: int
 ) -> Generator[Generator[int, None, None], None, None]:
@@ -25,6 +26,7 @@ def interpolate(
 def color_easing(t: float) -> float:
     # ease_in_out_cubic
     return -(math.cos(math.pi * t) - 1) / 2
+
 
 def make_it_quote(profile_picture: Image.Image, text: str, author: str) -> Image.Image:
     # Add text to the image
@@ -75,25 +77,19 @@ def make_it_quote(profile_picture: Image.Image, text: str, author: str) -> Image
 
     return quote_image
 
+
 def make_this_is(who: str, image: Image.Image) -> Image.Image:
     font = ImageFont.truetype(THIS_IS_FONT, size=128)
 
-    image = image.resize(
-        (1280, 780)
-    )
+    image = image.resize((1280, 780))
 
     template = Image.open(THIS_IS_TEMPLATE)
 
     template.paste(image, (0, 500))
-    
+
     draw = ImageDraw.Draw(template)
     _, _, width, _ = draw.textbbox((0, 0), who, font=font)
 
-    draw.text(
-        ((template.width - width) / 2, 250),
-        who,
-        font=font,
-        fill=(0, 0, 0, 0)
-    )
+    draw.text(((template.width - width) / 2, 250), who, font=font, fill=(0, 0, 0, 0))
 
     return template

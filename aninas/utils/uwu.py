@@ -30,18 +30,13 @@ UWU = [
     "rawr",
 ]
 
-LETTER_REPLACEMENTS = {
-    "r": "w",
-    "l": "w",
-    "R": "W",
-    "L": "W"
-}
+LETTER_REPLACEMENTS = {"r": "w", "l": "w", "R": "W", "L": "W"}
 
 ENDING_REPLACEMENTS = {
     "!": lambda: random.choice(UWU),
     "?": lambda: random.choice(UWU),
     ".": lambda: random.choice(UWU),
-    ",": lambda: random.choice(UWU)
+    ",": lambda: random.choice(UWU),
 }
 
 WORD_REPLACEMENTS = {
@@ -58,8 +53,9 @@ WORD_REPLACEMENTS = {
     "love": "luv",
     "stupid": "baka",
     "what": "nani",
-    "meow": "nya~"
+    "meow": "nya~",
 }
+
 
 def uwuify(text: str) -> str:
     for replacement in WORD_REPLACEMENTS:
@@ -74,7 +70,7 @@ def uwuify(text: str) -> str:
                 word = word.replace(replacement, LETTER_REPLACEMENTS[replacement])
 
             new_text.append(word)
-        
+
         text = " ".join(new_text)
 
     stuttered = []
@@ -87,7 +83,7 @@ def uwuify(text: str) -> str:
             stuttered.append(word)
 
     text = " ".join(stuttered)
-    
+
     for replacement in ENDING_REPLACEMENTS:
         new_text = []
 
@@ -97,9 +93,9 @@ def uwuify(text: str) -> str:
                 word = f"{word} {uwu}"
 
             new_text.append(word)
-        
+
         text = " ".join(new_text)
-    
+
     if text.startswith("`"):
         text = "\u200b" + text
     text = text.replace("`", "`\u200b")

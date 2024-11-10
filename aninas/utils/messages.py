@@ -21,7 +21,9 @@ async def suppress_embeds(
     if not message.embeds:
         if wait is not None:
             try:
-                _, message = await bot.wait_for("message_edit", check=lambda b, m: m.id == message.id, timeout=wait)
+                _, message = await bot.wait_for(
+                    "message_edit", check=lambda b, m: m.id == message.id, timeout=wait
+                )
             except asyncio.TimeoutError:
                 pass
             if not message.embeds:

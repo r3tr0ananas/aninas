@@ -11,16 +11,15 @@ import redis.asyncio as redis
 
 from ..constant import REDIS
 
-__all__ = ("Redis", )
+__all__ = ("Redis",)
+
 
 class Redis:
     def __init__(self):
         self.client = redis.Redis.from_url(REDIS)
-    
+
     async def get(
-        self, 
-        id: str,
-        _json: bool = True
+        self, id: str, _json: bool = True
     ) -> Optional[bytes] | Optional[dict]:
         cache = await self.client.get(id)
 
@@ -31,13 +30,9 @@ class Redis:
             return cache
 
         return None
-    
+
     async def set(
-        self,
-        id: str,
-        data: any,
-        expire: int | None = 600,
-        _json: bool = True
+        self, id: str, data: any, expire: int | None = 600, _json: bool = True
     ) -> bool:
         if _json:
             data = json.dumps(data)

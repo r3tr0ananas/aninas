@@ -11,9 +11,16 @@ import disnake_plugins
 
 from disnake.ext import commands
 
-from ..constant import (AUTOMATIC_REGEX, CODEBERG_COMMENT_LINK_REGEX,
-                        CODEBERG_ISSUE_LINK_REGEX, CODEBERG_RE, LIMIT_CHAR,
-                        LINK_REGEX, Colours, Emojis)
+from ..constant import (
+    AUTOMATIC_REGEX,
+    CODEBERG_COMMENT_LINK_REGEX,
+    CODEBERG_ISSUE_LINK_REGEX,
+    CODEBERG_RE,
+    LIMIT_CHAR,
+    LINK_REGEX,
+    Colours,
+    Emojis,
+)
 from ..utils.codeberg import Codeberg
 from ..utils.messages import suppress_embeds
 from ..utils.types.codeberg import Comment, Issue
@@ -21,69 +28,74 @@ from ..utils.ui import Delete, ShowLess
 
 plugin = disnake_plugins.Plugin()
 
+
 @plugin.load_hook(post=True)
 async def set_codeberg():
     global codeberg
     codeberg = Codeberg(plugin.bot.redis)
 
+
 @plugin.slash_command(name="codeberg")
 async def codeberg_command(inter):
     pass
+
 
 @codeberg_command.sub_command(description="Get user info from Codeberg")
 @commands.cooldown(1, 3, commands.BucketType.member)
 async def user(
     inter: disnake.CommandInteraction,
-    username: str = commands.Param(description="Codeberg username")
+    username: str = commands.Param(description="Codeberg username"),
 ):
     await inter.response.defer()
 
     user = await codeberg.get_user(username)
-    
-    username = f"{user.full_name} (@{user.username})" if user.full_name != "" else f"{user.username}"
+
+    username = (
+        f"{user.full_name} (@{user.username})"
+        if user.full_name != ""
+        else f"{user.username}"
+    )
 
     if user.pronouns != "":
         username = f"{username} | {user.pronouns}"
 
     embed = disnake.Embed(
-        title = username,
-        description = user.description,
-        timestamp = udatetime.from_string(user.created)
+        title=username,
+        description=user.description,
+        timestamp=udatetime.from_string(user.created),
     )
 
     embed.url = user.user_url
 
-
     embed.add_field(
-        name = f"{Emojis.follow} Followers",
-        value = f"[{user.followers}]({user.user_url}?tab=followers)"
+        name=f"{Emojis.follow} Followers",
+        value=f"[{user.followers}]({user.user_url}?tab=followers)",
     )
 
     embed.add_field(
-        name = f"{Emojis.follow} Following",
-        value = f"[{user.following}]({user.user_url}?tab=following)"
+        name=f"{Emojis.follow} Following",
+        value=f"[{user.following}]({user.user_url}?tab=following)",
     )
 
     embed.add_field(
-        name = f"{Emojis.repo} Total Repos",
-        value = f"[{len(user.repositories)}]({user.user_url}?tab=repositories)"
+        name=f"{Emojis.repo} Total Repos",
+        value=f"[{len(user.repositories)}]({user.user_url}?tab=repositories)",
     )
 
     if user.organizations is not None:
         embed.add_field(
-            name = "Organizations",
-            value = " | ".join([f"[{org.username}]({org.user_url})" for org in user.organizations])
+            name="Organizations",
+            value=" | ".join(
+                [f"[{org.username}]({org.user_url})" for org in user.organizations]
+            ),
         )
 
     if user.website != "":
-        embed.add_field(
-            name = f"{Emojis.link} Website",
-            value = user.website
-        )
+        embed.add_field(name=f"{Emojis.link} Website", value=user.website)
 
     embed.set_thumbnail(user.avatar)
 
-    embed.set_footer(text = "Account created")
+    embed.set_footer(text="Account created")
 
     view = Delete(inter.author)
 
@@ -95,7 +107,7 @@ async def user(
 async def repo(
     inter: disnake.CommandInteraction,
     username: str = commands.Param(description="Codeberg username"),
-    repostiory: str = commands.Param(description="Codeberg repostiory")
+    repostiory: str = commands.Param(description="Codeberg repostiory"),
 ):
     await inter.response.defer()
 
@@ -110,28 +122,29 @@ async def repo(
         name = f"{name} [archived]"
 
     embed = disnake.Embed(
-        title = name,
-        description = repo.description,
-        timestamp = udatetime.from_string(repo.created_at)
+        title=name,
+        description=repo.description,
+        timestamp=udatetime.from_string(repo.created_at),
     )
 
     embed.url = repo.url
 
     embed.set_author(
-        name = repo.owner.username,
-        url = repo.owner.user_url,
-        icon_url = repo.icon
+        name=repo.owner.username, url=repo.owner.user_url, icon_url=repo.icon
     )
 
-    embed.set_footer(text = f"{Emojis.fork_footer} {repo.forks} • {Emojis.star} {repo.stars} • {Emojis.eye} {repo.watchers} / Created")
+    embed.set_footer(
+        text=f"{Emojis.fork_footer} {repo.forks} • {Emojis.star} {repo.stars} • {Emojis.eye} {repo.watchers} / Created"
+    )
 
     await inter.followup.send(embed=embed)
+
 
 @plugin.listener("on_message")
 async def on_message(message: disnake.Message):
     if message.author.bot:
         return
- 
+
     embeds = []
     urls = set(LINK_REGEX.findall(message.content))
 
@@ -148,17 +161,17 @@ async def on_message(message: disnake.Message):
             path = file.group("path")
             start_line = file.group("start_line")
             end_line = file.group("end_line")
-            
+
             if start_line is None:
                 return
-        
+
             data = await codeberg.get_code(repo, path, start_line, end_line)
 
             if data is None:
-                return  
-        
+                return
+
             view = Delete(message.author)
-            
+
             await message.channel.send(data, view=view)
             return await suppress_embeds(plugin.bot, message)
 
@@ -171,7 +184,7 @@ async def on_message(message: disnake.Message):
 
             if data is None:
                 return
-            
+
             embed = make_embed(data)
 
             embeds.append((data, embed))
@@ -188,7 +201,7 @@ async def on_message(message: disnake.Message):
             embed = make_embed(data)
 
             embeds.append((data, embed))
-    
+
     view = Delete(message.author)
 
     if len(embeds) == 1:
@@ -200,7 +213,8 @@ async def on_message(message: disnake.Message):
         await message.channel.send(embeds=real_embeds, view=view)
         await suppress_embeds(plugin.bot, message)
 
-def make_embed(data: Issue | Comment, show_less = False) -> disnake.Embed:
+
+def make_embed(data: Issue | Comment, show_less=False) -> disnake.Embed:
     if isinstance(data, Issue):
         return make_issue_embed(data, show_less)
 
@@ -211,25 +225,24 @@ def make_embed(data: Issue | Comment, show_less = False) -> disnake.Embed:
             body = f"{body[:LIMIT_CHAR]}..."
 
     embed = disnake.Embed(
-        title = f"Comment: [{data.issue.full_name}] {data.issue.title}",
-        description = body,
-        color = Colours.pulls_draft,
-        timestamp = udatetime.from_string(data.created_at)
+        title=f"Comment: [{data.issue.full_name}] {data.issue.title}",
+        description=body,
+        color=Colours.pulls_draft,
+        timestamp=udatetime.from_string(data.created_at),
     )
 
     embed.url = data.html_url
 
     embed.set_author(
-        name = data.owner.username,
-        url = data.owner.user_url,
-        icon_url = data.owner.avatar
+        name=data.owner.username, url=data.owner.user_url, icon_url=data.owner.avatar
     )
 
     embed.set_footer(text="Commented on")
 
     return embed
 
-def make_issue_embed(data: Issue, show_less = False) -> disnake.Embed:
+
+def make_issue_embed(data: Issue, show_less=False) -> disnake.Embed:
     if data.type == "pulls":
         if data.state == "open" and not data.draft:
             emoji = Emojis.pulls_open
@@ -249,69 +262,64 @@ def make_issue_embed(data: Issue, show_less = False) -> disnake.Embed:
             color = Colours.issues_open
         elif data.state == "closed":
             emoji = Emojis.issues_closed
-            color = Colours.issues_closed   
+            color = Colours.issues_closed
 
-    body = data.body    
-    
+    body = data.body
+
     if show_less:
         if len(body) > LIMIT_CHAR:
             body = f"{body[:LIMIT_CHAR]}..."
 
     embed = disnake.Embed(
-        title = f"{emoji} [{data.full_name}] #{data.id} {data.title}",
-        description = body,
-        color = color,
-        timestamp = udatetime.from_string(data.created_at) 
+        title=f"{emoji} [{data.full_name}] #{data.id} {data.title}",
+        description=body,
+        color=color,
+        timestamp=udatetime.from_string(data.created_at),
     )
 
     embed.url = data.html_url
 
     embed.set_author(
-        name = data.owner.username,
-        url = data.owner.user_url,
-        icon_url = data.owner.avatar
+        name=data.owner.username, url=data.owner.user_url, icon_url=data.owner.avatar
     )
 
     if not show_less:
         if data.labels != []:
-            embed.add_field(
-                name = "Labels",
-                value = " | ".join(data.labels)
-            )
-        
+            embed.add_field(name="Labels", value=" | ".join(data.labels))
+
         if data.due_date is not None:
             due_date = int(udatetime.from_string(data.due_date).timestamp())
 
-            embed.add_field(
-                name = "Due Date",
-                value = f"<t:{due_date}>"
-            )
-        
+            embed.add_field(name="Due Date", value=f"<t:{due_date}>")
+
         if data.milestone is not None:
-            embed.add_field(
-                name = "Milestone",
-                value = data.milestone
-            )
+            embed.add_field(name="Milestone", value=data.milestone)
 
         if data.requsted_reviewers is not None:
             embed.add_field(
-                name = "Requested Reviewers",
-                value = " | ".join([f"[{user.username}]({user.user_url})" for user in data.requsted_reviewers])
+                name="Requested Reviewers",
+                value=" | ".join(
+                    [
+                        f"[{user.username}]({user.user_url})"
+                        for user in data.requsted_reviewers
+                    ]
+                ),
             )
 
         if data.assginees is not None:
             embed.add_field(
-                name = "Assignees",
-                value = " | ".join([f"[{user.username}]({user.user_url})" for user in data.assginees])
+                name="Assignees",
+                value=" | ".join(
+                    [f"[{user.username}]({user.user_url})" for user in data.assginees]
+                ),
             )
 
         if data.image is not None:
-            embed.set_image(
-                data.image
-            )
+            embed.set_image(data.image)
 
     embed.set_footer(text="Created at")
 
     return embed
+
 
 setup, teardown = plugin.create_extension_handlers()
