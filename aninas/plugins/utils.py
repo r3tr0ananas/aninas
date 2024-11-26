@@ -8,6 +8,7 @@ if TYPE_CHECKING:
 import base64
 import random
 import disnake_plugins
+from http import HTTPStatus
 from platform import python_version
 
 import disnake
@@ -19,61 +20,6 @@ from ..constant import Emojis
 from ..utils.embed import line_fix
 
 plugin = disnake_plugins.Plugin()
-HTTP_STATUS_CODES = [
-    100,
-    101,
-    102,
-    103,
-    200,
-    201,
-    202,
-    203,
-    204,
-    205,
-    206,
-    207,
-    208,
-    214,
-    226,
-    300,
-    301,
-    302,
-    303,
-    304,
-    305,
-    307,
-    308,
-    400,
-    401,
-    402,
-    403,
-    404,
-    405,
-    406,
-    407,
-    408,
-    409,
-    410,
-    411,
-    412,
-    413,
-    414,
-    415,
-    416,
-    417,
-    418,
-    420,
-    421,
-    422,
-    423,
-    424,
-    425,
-    426,
-    428,
-    429,
-    431,
-]
-
 
 @plugin.slash_command(description="Status about aninas")
 async def status(inter: disnake.CommandInteraction):
@@ -121,7 +67,7 @@ async def httpcat(
     inter: disnake.CommandInteraction,
     status_code: int = commands.Param(description="HTTP status code"),
 ):
-    if status_code not in HTTP_STATUS_CODES:
+    if status_code not in HTTPStatus._value2member_map_:
         await inter.response.send_message(
             "That is not a valid status code", ephemeral=True
         )
